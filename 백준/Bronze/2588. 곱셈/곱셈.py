@@ -1,0 +1,6 @@
+n1 =int(input())
+n2 =int(input())
+print(n1 * (n2%10))
+print(n1 * ((int(float(n2)*0.1))%10))
+print(n1 * ((int(float(n2)*0.01))%10))
+print(n1*n2)
