@@ -5,27 +5,25 @@ import java.util.Collections;
 public class Main{
     public static void main(String[] args){
         Scanner sc = new Scanner(System.in);
-        int[][] Pos = new int[2][3];
         int PosX =0;
         int PosY =0;
+        
+        ArrayList<Integer> xList = new ArrayList<Integer>();
+        ArrayList<Integer> yList = new ArrayList<Integer>();
         
         for(int i=0; i<3; i++){
             int x1 = sc.nextInt();
             int y1 = sc.nextInt();
             
-            Pos[0][i] =x1;
-            Pos[1][i] =y1;
+            xList.add(x1);
+            yList.add(y1);
         }
         
-        ArrayList<Integer> xList = new ArrayList<Integer>();
-        ArrayList<Integer> yList = new ArrayList<Integer>();
-        
-        for(int x : Pos[0]) xList.add(x);
-        for(int y : Pos[1]) yList.add(y);
-        
-        for(int i=0; i<3; i++){
-            if(Collections.frequency(xList,Pos[0][i]) == 1) PosX = Pos[0][i];
-            if(Collections.frequency(yList,Pos[1][i]) == 1) PosY = Pos[1][i];
+        for(int x : xList){
+            if(Collections.frequency(xList,x) == 1) PosX = x;
+        }
+        for(int y : yList){
+            if(Collections.frequency(yList,y) == 1) PosY =y;
         }
         
         System.out.printf("%d %d",PosX,PosY);
