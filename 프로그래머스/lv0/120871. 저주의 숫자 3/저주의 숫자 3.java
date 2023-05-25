@@ -2,21 +2,12 @@ class Solution {
     public int solution(int n) {
         int answer = 0;
         
-        int count = 1;
-        int num = 1;
-        while(count <= n){
-            if(!(num % 3 == 0 || isContainThree(num))) count++;
+        for(int i=0; i<n; i++){
             answer++;
-            num++;
+            if(answer % 3 ==0 || String.valueOf(answer).contains("3")) i--;
         }
         return answer;
     }
     
-    public boolean isContainThree(int n){
-        while(n > 0){
-            if(n % 10 == 3) return true;
-            n /= 10;
-        }
-        return false;
-    }
+    
 }
