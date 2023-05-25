@@ -4,7 +4,9 @@ class Solution {
         
         for(int i=0; i<numlist.length; i++){
             for(int j=i+1; j<numlist.length; j++){
-                if((Math.abs(n - numlist[i]) == Math.abs(n - numlist[j]) && numlist[i] < numlist[j]) || Math.abs(n - numlist[i]) > Math.abs(n - numlist[j])){
+                int diff = Math.abs(n - numlist[i]);
+                int diff2 = Math.abs(n - numlist[j]);
+                if((diff == diff2 && numlist[i] < numlist[j]) || diff > diff2){
                     int temp = numlist[i];
                     numlist[i] = numlist[j];
                     numlist[j] = temp;
