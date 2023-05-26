@@ -4,7 +4,6 @@ class Solution {
         int x = 0;
         int num = 0;
         String[] terms = polynomial.split("\\+");
-        
         for(int i = 0; i < terms.length; i++){
             String str = terms[i].trim();
             if(str.contains("x")){
@@ -14,12 +13,9 @@ class Solution {
             else num += Integer.valueOf(str);
         }
         
-        if(x == 1) answer = "x";
-        else if(x > 0) answer = String.format("%dx",x);
-        
-        if(x == 0) answer += String.valueOf(num);
-        else answer += ( num == 0 ?  "" : String.format(" + %d",num) );
-        
+        if(num == 0) answer = String.format("%dx",x);
+        else if(x == 0) answer = String.format("%d",num);
+        else answer = String.format("%dx + %d",x,num);
         
         return answer;
     }
