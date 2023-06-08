@@ -2,13 +2,13 @@ class Solution {
     public int[] solution(int[] arr) {
         int[] answer = {};
         
-        String size = Integer.toBinaryString(arr.length);
+        int size = 1;
         
-        if(!(size.length() - size.replace("1","").length() == 1)){
-            size = "1" + "0".repeat(size.length());
+        while(size < arr.length){
+            size *= 2;
         }
     
-        answer = new int[Integer.parseInt(size,2)];
+        answer = new int[size];
         
         for(int i = 0; i < arr.length; i++){
             answer[i] = arr[i];
