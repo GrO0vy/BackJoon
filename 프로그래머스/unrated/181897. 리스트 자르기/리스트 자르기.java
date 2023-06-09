@@ -1,35 +1,18 @@
-import java.util.List;
-import java.util.ArrayList;
 class Solution {
     public int[] solution(int n, int[] slicer, int[] num_list) {
         int[] answer = {};
         
-        List<Integer> result = new ArrayList<>();
-        int a = slicer[0];
-        int b = slicer[1];
-        int c = slicer[2];
+        int start = (n == 1 ? 0 : slicer[0]);
+        int end = (n == 2 ? num_list.length-1 : slicer[1]);
+        int step = (n == 4 ? slicer[2] : 1);
         
-        if(n == 1){
-            for(int i = 0; i <= b; i++){
-                result.add(num_list[i]);
-            }
+        int size = ( end -start + 1 ) / step + (( end -start + 1 ) % step == 0 ? 0 : 1); 
+        answer = new int[size];
+        
+        int idx = 0;
+        for(int i = start; i <= end; i += step){
+            answer[idx++] = num_list[i];
         }
-        else if(n ==2 ){
-            for(int i =a; i< num_list.length; i++){
-                result.add(num_list[i]);
-            }
-        }
-        else if(n == 3){
-            for(int i = a; i <= b; i++){
-               result.add(num_list[i]); 
-            }
-        }
-        else{
-            for(int i = a; i <= b; i += c){
-                result.add(num_list[i]);
-            }
-        }
-        answer = result.stream().mapToInt(x -> x).toArray();        
         return answer;
     }
 }

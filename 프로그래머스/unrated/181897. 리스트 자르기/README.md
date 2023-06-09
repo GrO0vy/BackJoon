@@ -1,10 +1,10 @@
 # [unrated] 리스트 자르기 - 181897 
 
-[문제 링크](https://school.programmers.co.kr/learn/courses/30/lessons/181897) 
+[문제 링크](https://school.programmers.co.kr/learn/courses/30/lessons/181897#) 
 
 ### 성능 요약
 
-메모리: 78.1 MB, 시간: 3.03 ms
+메모리: 66 MB, 시간: 0.02 ms
 
 ### 구분
 
