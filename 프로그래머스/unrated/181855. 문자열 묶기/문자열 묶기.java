@@ -1,7 +1,7 @@
 class Solution {
     public int solution(String[] strArr) {
         int answer = 0;
-        int[] result = new int[100000];
+        int[] result = new int[31];
         for(int i = 0; i < strArr.length; i++){
             result[strArr[i].length()] += 1;
         }
