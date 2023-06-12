@@ -6,14 +6,9 @@ class Solution {
         int i = 0;
         
         while(i < arr.length){
-            if(stk.size() == 0) stk.push(arr[i]);
+            if(!stk.isEmpty() && stk.peek() == arr[i]) stk.pop();
             else{
-                if(stk.peek() == arr[i]) {
-                    stk.pop();
-                }
-                else{
-                    stk.push(arr[i]);
-                }
+                stk.push(arr[i]);
             }
             i++;
         }
