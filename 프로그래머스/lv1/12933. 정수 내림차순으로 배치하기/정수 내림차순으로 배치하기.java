@@ -7,6 +7,7 @@ class Solution {
         StringBuilder sb = new StringBuilder();
         for(var digit : digits) sb.append(digit);
         
+        
         return Long.parseLong(sb.reverse().toString());
     }
 }
