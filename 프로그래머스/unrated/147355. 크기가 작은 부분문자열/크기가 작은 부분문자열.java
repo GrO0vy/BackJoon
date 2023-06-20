@@ -4,7 +4,7 @@ class Solution {
         long numberP = Long.parseLong(p);
         int length = p.length();
         
-        for(int i = 0; i < t.length() - length + 1; i++){
+        for(int i = 0; i <= t.length() - length; i++){
             long number = Long.parseLong(t.substring(i,i+length));
             if(number <= numberP) answer++;
         }
