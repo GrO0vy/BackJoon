@@ -6,9 +6,12 @@ class Solution {
         int width = sc.nextInt();
         int height = sc.nextInt();
         
+        StringBuilder sb = new StringBuilder();
+        
         for(int i=0; i<height; i++){
-            System.out.println("*".repeat(width));
+            sb.append("*".repeat(width) +"\n");
         }
+        System.out.println(sb.toString());
         sc.close();
     }
 }
