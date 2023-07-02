@@ -5,6 +5,6 @@ class Solution {
         for(int i = 0; i < n; i++){
             answer[i] = x * (long)(i + 1); 
         }
-        return answer;
+        return answer; 
     }
 }
