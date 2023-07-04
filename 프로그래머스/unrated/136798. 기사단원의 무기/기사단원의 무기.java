@@ -1,21 +1,19 @@
 class Solution {
     public int solution(int number, int limit, int power) {
+        int[] count = new int[number + 1];    
+        for (int i = 1; i <= number; i++) {
+            for (int j = 1; j <= number / i; j++) {
+                count[i * j]++;
+            }
+        }
         int answer = 0;
-        
-        for(int i = 1; i <= number; i++){
-            int divisors = cntOfDivisor(i);
-            if(divisors > limit) answer+= power;
-            else answer += divisors;
+        for (int i = 1; i <= number; i++) {
+            if (count[i] > limit) {
+                answer += power;
+            } else {
+                answer += count[i];
+            }
         }
         return answer;
-    }
-    
-    public int cntOfDivisor(int num){
-        int count = 0;
-        for(int i = 1; i * i <= num; i++){
-            if(i * i == num) count++;
-            else if(num % i == 0) count += 2;
-        }
-        return count;
     }
 }
