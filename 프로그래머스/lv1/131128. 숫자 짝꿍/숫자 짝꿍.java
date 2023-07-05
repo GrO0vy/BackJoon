@@ -1,20 +1,26 @@
 class Solution {
     public String solution(String X, String Y) {
-        String answer = "";
-        
-        
-        for(int i = 9; i >= 0; i--){
-            String target = String.valueOf(i);
-            int xCount = X.length() - X.replace(target,"").length();
-            int yCount = Y.length() - Y.replace(target,"").length();
-            int count = xCount > yCount ? yCount : xCount;
-            answer += target.repeat(count);
+        StringBuilder answer = new StringBuilder();
+        int[] x = {0,0,0,0,0,0,0,0,0,0};
+        int[] y = {0,0,0,0,0,0,0,0,0,0};
+        for(int i=0; i<X.length();i++){
+           x[X.charAt(i)-48] += 1;
         }
-        
-        if(answer.length() == 0) return "-1";
-        
-        if(answer.replace("0","").length() == 0) answer = "0";
-        
-        return answer;
+        for(int i=0; i<Y.length();i++){
+           y[Y.charAt(i)-48] += 1;
+        }
+
+        for(int i=9; i >= 0; i--){
+            for(int j=0; j<Math.min(x[i],y[i]); j++){
+                answer.append(i);
+            }
+        }
+        if("".equals(answer.toString())){
+           return "-1";
+        }else if(answer.toString().charAt(0)==48){
+           return "0";
+        }else {
+            return answer.toString();
+        }
     }
 }
