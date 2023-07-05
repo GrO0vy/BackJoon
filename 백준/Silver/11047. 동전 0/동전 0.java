@@ -16,14 +16,10 @@ public class Main{
         }
         
         int coinUsed = 0;
-        int idx = 0;
         
-        while(targetAmounts > 0){
-            if(coinAmounts[idx] > targetAmounts) idx++;
-            else {
-                targetAmounts -= coinAmounts[idx];
-                coinUsed++;
-            }
+        for(int i = 0; i < coinKinds; i++){
+            coinUsed += targetAmounts / coinAmounts[i];
+            targetAmounts %= coinAmounts[i];
         }
         
         System.out.println(coinUsed);
