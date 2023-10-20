@@ -10,17 +10,11 @@ public class Main{
         int repeatCount = Integer.parseInt(st.nextToken());
         
         st = new StringTokenizer(br.readLine());
-       
-        int[] numArr = new int[numCount + 1];
         int[] sumArr = new int[numCount + 1];
-        
-        int currentSum = 0;
         
         for(int i = 1; i < numCount + 1; i++){
             int num = Integer.parseInt(st.nextToken());
-            currentSum += num;
-            numArr[i] = num;
-            sumArr[i] = currentSum;
+            sumArr[i] = sumArr[i - 1] + num;
         }
         
         for(int i = 0; i < repeatCount; i++){
