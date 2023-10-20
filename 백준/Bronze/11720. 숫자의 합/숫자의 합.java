@@ -1,17 +1,25 @@
-import java.util.Scanner;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.BufferedWriter;
+import java.io.OutputStreamWriter;
+import java.io.IOException;
 
 public class Main{
-    public static void main(String[] args){
-        Scanner sc = new Scanner(System.in);
-        int iter = sc.nextInt();
-        String s = sc.next();
-        int total = 0;
+    public static void main(String[] args) throws IOException{
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
         
-        for(int i =0; i<iter; i++){
-            int number = Character.getNumericValue(s.charAt(i));
-            total += number;
+        int count = Integer.parseInt(br.readLine());
+        int sum = 0;
+        
+        for(int i = 0; i < count; i++){
+            int number = br.read() - 48;
+            sum += number;
         }
-        System.out.println(total);
-        sc.close();
+        
+        bw.write(String.valueOf(sum));
+        
+        bw.close();
+        br.close();
     }
 }
