@@ -1,30 +1,26 @@
-import java.util.Scanner;
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.StringTokenizer;
 
 public class Main{
-    public static void main(String[] args){
-        Scanner sc = new Scanner(System.in);
-        int N = sc.nextInt();
-       
-        int startIndex = 1;
-        int endIndex = 1;
-        int count = 1;
-        int sum = 1;
-        
-        while(startIndex + endIndex <= N){
-            if(sum == N){
-                count++;
-                sum += ++endIndex;
+    public static void main(String[] args) throws Exception{
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        int n = Integer.parseInt(br.readLine());
+        int s=1,e=1;
+        long now=1;
+        long ans=0;
+
+        while (e < n) {
+            if (now <= n) {
+                now += e + 1;
+                e++;
+            } else {
+                now -= s;
+                s++;
             }
-            else if(sum > N){
-                sum -= startIndex++;
-            }
-            else{
-                sum += ++endIndex;
-            }
+            if (now == n) ans++;
         }
-        
-        System.out.println(count);
-        
-        sc.close();
+        System.out.println(ans+1);
     }
 }
