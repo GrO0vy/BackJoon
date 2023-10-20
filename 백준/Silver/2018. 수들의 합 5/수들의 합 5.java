@@ -10,7 +10,7 @@ public class Main{
         int count = 1;
         int sum = 1;
         
-        while(endIndex < N){
+        while(startIndex + endIndex <= N){
             if(sum == N){
                 count++;
                 sum += ++endIndex;
