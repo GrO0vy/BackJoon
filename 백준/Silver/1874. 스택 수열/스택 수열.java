@@ -1,33 +1,38 @@
-import java.util.*;
 import java.io.*;
+import java.util.*;
 
 public class Main{
     public static void main(String[] args) throws IOException{
-        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
-        int T = Integer.parseInt(reader.readLine());
-        
-        int count = 1;
-        
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringBuilder sb = new StringBuilder();
+
+        int n = Integer.parseInt(br.readLine());
+
         Stack<Integer> stack = new Stack<>();
-        StringBuilder answer = new StringBuilder();
-        
-        for(int i = 0; i < T; i++){
-            int number = Integer.parseInt(reader.readLine());
-            
-            for(; count <= number; count++){
-                stack.push(count);
-                answer.append("+\n");
-            }
-            
-            if(!stack.isEmpty() && stack.peek() == number){
+        int next = 1;
+
+        for(int i = 0; i < n; i++) {
+            int num = Integer.parseInt(br.readLine());
+
+            if (num >= next) {
+                while (num >= next) {
+                    stack.push(next++);
+                    sb.append("+\n");
+                }
                 stack.pop();
-                answer.append("-\n");
-            }
-            else{
-                System.out.println("NO");
-                return;
+                sb.append("-\n");
+            } else {
+                int top = stack.pop();
+                if (num > top) {
+                    System.out.println("NO");
+                    return;
+                }
+                else{
+                    sb.append("-\n");
+                }
             }
         }
-        System.out.println(answer);
+
+        System.out.println(sb);
     }
 }
