@@ -1,36 +1,45 @@
-import java.util.Scanner;
+import java.io.*;
+import java.util.*;
 
 public class Main {
-    public static void main(String[] args) {
-        Scanner sc = new Scanner(System.in);
-        int num1 = sc.nextInt();
-        int num2 = sc.nextInt();
-        int[] a = new int[num1];
+    public static void main(String[] args) throws IOException{
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringTokenizer st = new StringTokenizer(br.readLine());
 
-        // 숫자 입력 받기
-        for (int i = 0; i < a.length; i++) {
-            a[i] = sc.nextInt();
+        int N = Integer.parseInt(st.nextToken());
+        int K = Integer.parseInt(st.nextToken());
+
+        st = new StringTokenizer(br.readLine());
+
+        int[] arr = new int[N];
+        for(int i = 0; i < N; i++){
+            arr[i] = Integer.parseInt(st.nextToken());
         }
+        
+        int count = 0;
+        int[] answer = new int[2];
 
-        // 임시 저장 공간
-        int tmp = 0;
+        for(int i = 0; i < N - 1; i++){
+            for(int j = 0; j < N - i - 1; j++){
+                if(arr[j] > arr[j + 1]){
+                    int temp = arr[j];
+                    arr[j] = arr[j + 1];
+                    arr[j + 1] = temp;
+                    count++;
 
-        // 버블정렬 알고리즘
-        for(int i = a.length - 1; i>=0; i--) {
-            for(int j = 0; j<i; j++) {
-                if(a[j] >= a[j+1]) { // j번지와 j+1 번지의 값을 비교
-                    --num2;
-                    tmp = a[j];
-                    a[j] = a[j+1];
-                    a[j+1] = tmp;
-                    if(num2 == 0) {
-                        System.out.printf("%d %d", a[j], a[j+1]);
+                    if(count == K){
+                        answer[0] = arr[j];
+                        answer[1] = arr[j + 1];
+                        Arrays.sort(answer);
+                        System.out.printf("%d %d", answer[0], answer[1]);
+                        return;
                     }
                 }
             }
+
         }
-        if(num2 > 0) { // num2 > 0 이면 교환횟수가 num2 보다 적었다는 뜻
-            System.out.println(-1);
-        }
+
+        System.out.println(-1);
+        br.close();
     }
 }
