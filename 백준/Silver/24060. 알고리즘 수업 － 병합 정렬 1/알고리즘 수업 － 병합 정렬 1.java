@@ -46,40 +46,26 @@ public class Main{
 
         while(left <= mid && right <= end){
             if(arr[left] <= arr[right]){
-                temp[idx] = arr[left];
-                count++;
-                if(count == K) result = temp[idx];
-                idx++;
-                left++;
+                temp[idx++] = arr[left++];
             }
 
             else {
-                temp[idx] = arr[right];
-                count++;
-                if(count == K) result = temp[idx];
-                idx++;
-                right++;
+                temp[idx++] = arr[right++];
             }
         }
 
         while(left <= mid){
-            temp[idx] = arr[left];
-            count++;
-            if(count == K) result = temp[idx];
-            idx++;
-            left++;
+            temp[idx++] = arr[left++];
         }
 
         while(right <= end){
-            temp[idx] = arr[right];
-            count++;
-            if(count == K) result = temp[idx];
-            idx++;
-            right++;
+            temp[idx++] = arr[right++];
         }
 
         for(int i = start; i <= end; i++){
             arr[i] = temp[i - start];
+            count++;
+            if(count == K) result = arr[i];
         }
     }
 }
