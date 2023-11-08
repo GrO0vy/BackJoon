@@ -2,31 +2,31 @@ import java.util.HashMap;
 
 class Solution {
     public int[] solution(String[] keymap, String[] targets) {
-        HashMap<Character, Integer> hm = new HashMap<>();
-        int[] ret = new int[targets.length];
+        int[] answer = new int[targets.length];
         
-        for(String key : keymap) {
-            for(int i=0 ; i<key.length() ; i++) {
+        HashMap<Character, Integer> keys = new HashMap<>();
+        
+        for(String key: keymap){
+            for(int i = 0; i < key.length(); i++){
                 char c = key.charAt(i);
-                if(!hm.containsKey(c) || i<hm.get(c)) {
-                    hm.put(c, i+1);
-                }
+                int idx = key.indexOf(c);
+                if(!keys.containsKey(c) || idx < keys.get(c)) keys.put(c, idx + 1); 
             }
         }
         
-        for(int i=0 ; i<targets.length ; i++) {
-            int cnt = 0;
-            for(int j=0 ; j<targets[i].length() ; j++) {
-                char c = targets[i].charAt(j);
-                if(!hm.containsKey(c)) {
-                    cnt = 0;
+        int idx = 0;
+        for(String target: targets){
+            for(int i = 0; i < target.length(); i++){
+                char c = target.charAt(i);
+                if(keys.containsKey(c)) answer[idx] += keys.get(c);
+                else {
+                    answer[idx] = -1;
                     break;
-                } else {
-                    cnt += hm.get(c);
                 }
             }
-            ret[i] = cnt==0?-1:cnt;
+            idx++;
         }
-        return ret;
+        
+        return answer;
     }
 }
