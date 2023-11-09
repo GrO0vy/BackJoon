@@ -1,5 +1,3 @@
-import java.util.HashMap;
-
 class Solution {
     public String solution(int[] numbers, String hand) {
         String answer = "";
@@ -7,19 +5,13 @@ class Solution {
         int[][] keyMap = {{3,1}, {0,0}, {0,1}, {0,2}, {1,0}, {1,1}, 
                         {1,2}, {2,0}, {2,1}, {2,2}};
         
-        HashMap<Integer, int[]> phone = new HashMap<>();
-        
-        for(int i = 0; i < 10; i++){
-            phone.put(i, keyMap[i]);
-        }
-        
         int[] left = {3, 0};
         int[] right = {3, 2};
         
         StringBuilder sb = new StringBuilder();
         
         for(int num: numbers){
-            int[] des = phone.get(num);
+            int[] des = keyMap[num];
             if(num == 1 || num == 4 || num == 7){
                 left = des;
                 sb.append("L");
