@@ -1,23 +1,27 @@
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.*;
 
-public class Main{
+public class Main
+{
     public static void main(String[] args) throws IOException{
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        int N = Integer.parseInt(br.readLine());
-        
-        int[] arr = new int[N];
-        for(int i = 0; i < N; i++){
-            arr[i] = Integer.parseInt(br.readLine()); 
-        }
-        
-        Arrays.sort(arr);
-        
         StringBuilder sb = new StringBuilder();
-        for(int num: arr){
-            sb.append(num + "\n");
+
+        boolean[] arr = new boolean[2000001]; //기준점 1000000
+        int N = Integer.parseInt(br.readLine());
+
+        for(int i=0; i<N; i++){
+            arr[1000000+Integer.parseInt(br.readLine())] = true;
         }
-        
-        System.out.println(sb);
-    }    
+
+        int len = arr.length;
+
+        for(int i=0; i<len; i++){
+            if(arr[i])
+                sb.append(i-1000000).append('\n');
+        }
+        System.out.print(sb);
+    }
 }
