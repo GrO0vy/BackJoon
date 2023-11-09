@@ -1,36 +1,39 @@
-import java.io.*;
-import java.util.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.StringTokenizer;
 
-public class Main{
-    public static void main(String[] args) throws IOException{
+public class Main {
+    public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        int N = Integer.parseInt(br.readLine());
-        
-        List<Integer>[] pos = new ArrayList[200001];
-        for(int i = 0; i < pos.length; i++){
-            pos[i] = new ArrayList<>();
-        }
-        
-        for(int i = 0; i < N; i++){
-            StringTokenizer st = new StringTokenizer(br.readLine());
-            int x = Integer.parseInt(st.nextToken());
-            int y = Integer.parseInt(st.nextToken());
-            pos[100000 + x].add(y);
-        }
-        
-        for(int i = 0; i < pos.length; i++){
-            Collections.sort(pos[i]);
-        }
-        
+        StringTokenizer st;
         StringBuilder sb = new StringBuilder();
-        
-        for(int i = 0; i < pos.length; i++){
-            List<Integer> list = pos[i];
-            for(int posY: list){
-                sb.append(i - 100000 + " " + posY + "\n");    
-            }
+
+        int N = Integer.parseInt(br.readLine());
+        int[][] coordinate = new int[N][2];
+
+        for(int i = 0; i < N; i++) {
+            st  = new StringTokenizer(br.readLine(), " ");
+
+            coordinate[i][0] = Integer.parseInt(st.nextToken());
+            coordinate[i][1] = Integer.parseInt(st.nextToken());
         }
-        
+
+        Arrays.sort(coordinate, new Comparator<int[]>() {
+            @Override
+            public int compare(int[] o1, int[] o2) {
+                if(o1[0] == o2[0])
+                    return o1[1] - o2[1];
+                else
+                    return o1[0] - o2[0];
+            }
+        });
+
+        for(int i = 0; i < N; i++)
+            sb.append(coordinate[i][0]+" "+coordinate[i][1]).append('\n');
+
         System.out.println(sb);
     }
 }
