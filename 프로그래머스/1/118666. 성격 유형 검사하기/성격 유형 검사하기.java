@@ -2,16 +2,14 @@ import java.util.HashMap;
 
 class Solution {
     public String solution(String[] survey, int[] choices) {
+        char[][] types = {{'R', 'T'}, {'C', 'F'}, {'J', 'M'}, {'A', 'N'}};
         String answer = "";
-        HashMap<Character, Integer> map = new HashMap<>();
-        map.put('R', 0);
-        map.put('T', 0);
-        map.put('C', 0);
-        map.put('F', 0);
-        map.put('J', 0);
-        map.put('M', 0);
-        map.put('A', 0);
-        map.put('N', 0);
+        
+        HashMap<Character, Integer> points = new HashMap<>();
+        for(char[] type: types){
+            points.put(type[0], 0);
+            points.put(type[1], 0);
+        }
         
         
         for(int i = 0; i < survey.length; i++){
@@ -22,25 +20,18 @@ class Solution {
             
             if(choice < 4){
                 char key = s.charAt(0);
-                map.put(key, map.get(key) + 4 - choice);
+                points.put(key, points.get(key) + 4 - choice);
             }
             else{
                 char key = s.charAt(1);
-                map.put(key, map.get(key) + choice - 4);
+                points.put(key, points.get(key) + choice - 4);
             }
         }
         
-        if(map.get('R') >= map.get('T')) answer += 'R';
-        else answer += 'T';
-        
-        if(map.get('C') >= map.get('F')) answer += 'C';
-        else answer += 'F';
-        
-        if(map.get('J') >= map.get('M')) answer += 'J';
-        else answer += 'M';
-        
-        if(map.get('A') >= map.get('N')) answer += 'A';
-        else answer += 'N';
+        for(char[] type: types){
+            if(points.get(type[0]) >= points.get(type[1])) answer += type[0];
+            else answer += type[1];
+        }
         
         return answer;
     }
