@@ -2,32 +2,25 @@ import java.util.*;
 
 class Solution {
     public String[] solution(String[] players, String[] callings) {
-
-        int numOfPlayers = players.length;
-        Map<String, Integer> ranking = new HashMap<>();
+        String[] answer = new String[players.length];
         
-        for (int i=0; i<numOfPlayers ; i++) {
-            ranking.put(players[i], i);
+        HashMap<String, Integer> map = new HashMap<>();
+        for(int i = 0; i < players.length; i++){
+            map.put(players[i], i);
         }
         
-
-        
-        //경주 진행
-        for (String player : callings) {
-            //1) player의 이름에 해당하는 value를 저장한다. 
-            int playerRanking = ranking.get(player);
+        for(String player: callings){
+            int idx = map.get(player);
             
-            //2) player보다 앞에 있는 사람을 발견하고, value를 변경함
-            String frontPlayer = players[playerRanking-1];
-            
-            ranking.replace(frontPlayer, playerRanking);
-            players[playerRanking] = frontPlayer;
-            
-            //3) player의 랭킹을 앞으로 변경함.
-            ranking.replace(player, playerRanking-1);
-            players[playerRanking-1] = player; 
+            players[idx] = players[idx - 1];
+            players[idx - 1] = player;
+            map.put(player, idx - 1);
+            map.put(players[idx], idx);
         }
         
-        return players;
+        for(int i = 0; i < players.length; i++){
+            answer[i] = players[i];
+        }
+        return answer;
     }
 }
