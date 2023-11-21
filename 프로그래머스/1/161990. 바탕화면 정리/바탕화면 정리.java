@@ -1,26 +1,30 @@
 class Solution {
     public int[] solution(String[] wallpaper) {
-        int minRow, minCol;
-        int maxRow, maxCol;
+        int[] answer = new int[4];
         
-        minRow = minCol = Integer.MAX_VALUE;
-        maxRow = maxCol = Integer.MIN_VALUE;
-
-        int row = wallpaper.length;
-        int col = wallpaper[0].length();
-
-        for (int r = 0; r < row; r++) {
-            for (int c = 0; c < col; c++) {
-                if (wallpaper[r].charAt(c) == '#') {
-                    minRow = Math.min(minRow, r);
-                    minCol = Math.min(minCol, c);
-                    maxRow = Math.max(maxRow, r);
-                    maxCol = Math.max(maxCol, c);
+        int minRow = Integer.MAX_VALUE;
+        int maxRow = Integer.MIN_VALUE;
+        int minCol = Integer.MAX_VALUE;
+        int maxCol = Integer.MIN_VALUE;
+        
+        for(int i = 0; i < wallpaper.length; i++){
+            for(int j = 0; j < wallpaper[i].length(); j++){
+                if(wallpaper[i].charAt(j) == '#'){
+                    if(minRow > i) minRow = i;
+                    if(maxRow < i) maxRow = i;
+                    if(minCol > j) minCol = j;
+                    if(maxCol < j) maxCol = j;
                 }
             }
         }
-
-        //max 값에 + 1을 하는 이유는 드래그를 하려면 끝점을 선택해야 함
-        return new int[]{minRow, minCol, maxRow + 1, maxCol + 1};
+        maxRow += 1;
+        maxCol += 1;
+        
+        answer[0] = minRow;
+        answer[1] = minCol;
+        answer[2] = maxRow;
+        answer[3] = maxCol;
+        
+        return answer;
     }
 }
