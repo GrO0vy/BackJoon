@@ -21,7 +21,7 @@ public class Main{
             int a = Integer.parseInt(st.nextToken());
             int b = Integer.parseInt(st.nextToken());
 
-            if(op == 0) union(find(a), b);
+            if(op == 0) union(a, b);
             else{
                 System.out.println(find(a) == find(b) ? "YES" : "NO");
             }
@@ -29,13 +29,16 @@ public class Main{
     }
 
     static int find(int num){
-        int result = num;
-        if(arr[num] != num) result = find(arr[num]);
-        return result;
+        if(arr[num] != num) return arr[num] = find(arr[num]);
+        else return num;
     }
 
     static void union(int a, int b){
-        if(arr[b] != b) union(a, arr[b]);
-        arr[b] = a;
+        int parentA = find(a);
+        int parentB = find(b);
+        
+        if(parentA != parentB){
+            arr[parentB] = parentA; 
+        }
     }
 }
