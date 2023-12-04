@@ -1,18 +1,19 @@
-
 import java.util.*;
- 
+
 class Solution {
-  public String solution(String s) {
-      String answer = "";
-      ArrayList<Integer> arr = new ArrayList<Integer>();
-      String[] str = s.split(" ");
- 
-      for(int i=0; i<str.length; i++) {
-          arr.add(Integer.parseInt(str[i]));
-      }
- 
-      answer = "" + Collections.min(arr) + " " + Collections.max(arr);
- 
-      return answer;
-  }
+    public String solution(String s) {
+        String answer = "";
+        
+        List<Integer> list = new ArrayList<>();
+        StringTokenizer st = new StringTokenizer(s);
+        
+        while(st.hasMoreTokens()){
+            list.add(Integer.parseInt(st.nextToken()));
+        }
+        
+        answer += Collections.min(list);
+        answer += " " + Collections.max(list);
+        
+        return answer;
+    }
 }
