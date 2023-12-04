@@ -1,39 +1,39 @@
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.HashSet;
+import java.util.*;
 
 class Solution {
-    public int[] solution(String[] idList, String[] report, int k){
-        // @param idList : 이용자의 ID를 담은 배열.
-        // @param report : 신고한 이용자와 신고당한 이용자의 정보를 담은 배열. ex) "a b",.. -> a가 b를 신고
-        // @param k      : 신고 횟수에 따른 정지 기준 정수값.
-        // @return answer : id_list에 담긴 id 순서대로 각 유저가 받은 신고 결과 메일 개수 배열.
-        int[] answer = new int[idList.length];
-        HashMap<String, HashSet<String>> reporterInfoMap = new HashMap<>();
-        HashMap<String, Integer> reportedCountInfoMap = new HashMap<>();
-        HashSet<String> reportSet = new HashSet<>(Arrays.asList(report));
-        
-        for(String reportInfo : reportSet){
-            String reporter = reportInfo.split(" ")[0];  // 신고 한 사람
-            String reported = reportInfo.split(" ")[1];  // 신고 당한 사람
-            reporterInfoMap.putIfAbsent(reporter, new HashSet<String>(){{
-                add(reported);
-            }});
-            reporterInfoMap.get(reporter).add(reported);
-            reportedCountInfoMap.put(reported, reportedCountInfoMap.getOrDefault(reported, 0)+1);
+    public int[] solution(String[] id_list, String[] report, int k) {
+        int[] answer = {};
+        answer = new int[id_list.length];
+
+        HashMap<String, HashSet<String>> logs = new HashMap<>();
+        HashMap<String, Integer> reportedCount = new HashMap<>();
+
+        for (String id : id_list) {
+            logs.put(id, new HashSet<>());
+            reportedCount.put(id, 0);
         }
 
-        for (String reported : reportedCountInfoMap.keySet()){
-            int reportedCount = reportedCountInfoMap.get(reported);
-            if(reportedCount >= k){
-                // 메일 발송 대상
-                for(int i=0; i<idList.length; i++){
-                    if(reporterInfoMap.containsKey(idList[i]) && reporterInfoMap.get(idList[i]).contains(reported)) {
-                        answer[i]++;
-                    }
-                }
+        for (String users : report) {
+            StringTokenizer st = new StringTokenizer(users);
+            String reporter = st.nextToken();
+            String reportee = st.nextToken();
+            logs.get(reporter).add(reportee);
+        }
+
+        for (String reporter : logs.keySet()) {
+            HashSet<String> reportees = logs.get(reporter);
+            for (String reportee : reportees) {
+                reportedCount.put(reportee, reportedCount.get(reportee) + 1);
             }
         }
+
+        for (int i = 0; i < id_list.length; i++) {
+            String id = id_list[i];
+            for (String reportee : logs.get(id)) {
+                if (reportedCount.get(reportee) >= k) answer[i]++;
+            }
+        }
+
         return answer;
-   }
+    }
 }
