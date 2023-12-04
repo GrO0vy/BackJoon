@@ -1,20 +1,25 @@
 class Solution {
     public int solution(int n) {
         int answer = 0;
-        
-        for(int i = 1; i <= n; i++){
-            int sum = i;
-            if(sum == n) answer++;
-            for(int j = i + 1; j <= n; j++){
-                sum += j;
-                if(sum == n) {
-                    answer++;
-                    break;
-                }
-                else if(sum > n) break;
+
+        int[] sum = new int[n / 2 + 2];
+        for(int i = 1; i < sum.length; i++){
+            sum[i] = sum[i - 1] + i;
+        }
+
+        int start = 0;
+        int end = 1;
+
+        while(end < sum.length){
+            if(sum[end] - sum[start] < n) end++;
+            else if(sum[end] - sum[start] > n) start++;
+            else{
+                answer++;
+                start++;
+                end++;
             }
         }
-        
-        return answer;
+
+        return n == 1 || n == 2 ? answer : answer + 1;
     }
 }
