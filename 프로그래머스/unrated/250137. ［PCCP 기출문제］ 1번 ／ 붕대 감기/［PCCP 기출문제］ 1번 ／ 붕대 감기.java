@@ -2,8 +2,6 @@ import java.util.HashMap;
 
 class Solution {
     public int solution(int[] bandage, int health, int[][] attacks) {
-        int answer = 0;
-        
         int currentHealth = health;
         int maxCombo = bandage[0];
         int heal = bandage[1];
@@ -37,6 +35,6 @@ class Solution {
             }
         }
         
-        return currentHealth < 0 ? -1 : currentHealth;
+        return currentHealth;
     }
 }
