@@ -40,10 +40,10 @@ public class Main{
             int vertex = queue.poll();
             sb.append(vertex).append(" ");
             
-            for(int v: adjList[vertex]) degree[v] -= 1;
-            for(int v: adjList[vertex]){
+            for(int v: adjList[vertex]) {
+                degree[v] -= 1;
                 if(degree[v] == 0) queue.offer(v);
-            }
+            }     
         }
         
         System.out.println(sb);
