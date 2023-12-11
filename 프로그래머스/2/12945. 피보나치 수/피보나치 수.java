@@ -2,7 +2,7 @@ class Solution {
     public int solution(int n) {
         int answer = 0;
         
-        long[] arr = new long[n + 1];
+        int[] arr = new int[n + 1];
         arr[0] = 0;
         arr[1] = 1;
         
