@@ -1,49 +1,43 @@
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.util.Stack;
 
-public class Main {
+public class Main{
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        String init = br.readLine();
 
-        String str = br.readLine();
-        Stack<Character> leftStack = new Stack<>();
-        Stack<Character> rightStack = new Stack<>();
+        Stack<Character> left = new Stack<>();
+        Stack<Character> right = new Stack<>();
 
-        for(int i = 0; i < str.length(); i++){
-            leftStack.push(str.charAt(i));
+        for (int i = 0; i < init.length(); i++) {
+            left.push(init.charAt(i));
         }
 
-        int N  = Integer.parseInt(br.readLine());
+        int M = Integer.parseInt(br.readLine());
 
-        for(int i = 0; i < N; i++){
-            String cmd = br.readLine();
-            switch (cmd.charAt(0)){
+        for (int i = 0; i < M; i++) {
+            String command = br.readLine();
+
+            switch (command.charAt(0)) {
                 case 'L':
-                    if(leftStack.empty()) break;
-                    rightStack.push(leftStack.pop());
+                    if(!left.isEmpty()) right.push(left.pop());
                     break;
                 case 'D':
-                    if(rightStack.empty()) break;
-                    leftStack.push(rightStack.pop());
+                    if(!right.isEmpty()) left.push(right.pop());
                     break;
                 case 'B':
-                    if(leftStack.empty()) break;
-                    leftStack.pop();
+                    if(!left.isEmpty()) left.pop();
                     break;
                 case 'P':
-                    leftStack.push(cmd.charAt(2));
+                    left.push(command.charAt(2));
                     break;
             }
         }
-        while(!leftStack.empty()){
-            rightStack.push(leftStack.pop());
-        }
+
         StringBuilder sb = new StringBuilder();
-        while (!rightStack.empty()){
-            sb.append(rightStack.pop());
-        }
-        System.out.println(sb.toString());
+        while (!left.isEmpty()) right.push(left.pop());
+        while (!right.isEmpty()) sb.append(right.pop());
+
+        System.out.println(sb);
     }
 }
