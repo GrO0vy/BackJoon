@@ -9,12 +9,12 @@ public class Main{
         int N = Integer.parseInt(st.nextToken());
         int M = Integer.parseInt(st.nextToken());
 
-        int[][] ySum = new int[N + 1][N + 1];
+        int[][] sum = new int[N + 1][N + 1];
         for(int i = 1; i <= N; i++){
             st = new StringTokenizer(br.readLine());
 
             for(int j = 1; j <= N; j++){
-                ySum[i][j] = ySum[i][j-1] + Integer.parseInt(st.nextToken());
+                sum[i][j] = sum[i][j-1] + sum[i-1][j] - sum[i-1][j-1] + Integer.parseInt(st.nextToken());
             }
         }
 
@@ -26,13 +26,8 @@ public class Main{
             int x2 = Integer.parseInt(st.nextToken());
             int y2 = Integer.parseInt(st.nextToken());
 
-            int sum = 0;
-            for(int j = x1; j <= x2; j++){
-                sum += ySum[j][y2] - ySum[j][y1 - 1];
-            }
-
-
-            sb.append(sum + "\n");
+            int result = sum[x2][y2] - sum[x1-1][y2] - sum[x2][y1-1] + sum[x1-1][y1-1];
+            sb.append(result + "\n");
         }
 
         System.out.println(sb);
