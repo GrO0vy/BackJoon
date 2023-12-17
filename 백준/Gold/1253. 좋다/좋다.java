@@ -31,8 +31,12 @@ public class Main{
                 if(sum > target) end--;
                 else if(sum < target) start++;
                 else{
-                    result++;
-                    break;
+                    if(start == i) start++;
+                    else if(end == i) end--;
+                    else {
+                        result++;
+                        break;
+                    }
                 }
             }
         }
