@@ -9,7 +9,17 @@ public class Main{
         int num = 666;
 
         while(true){
-            if(String.valueOf(num).contains("666")) count++;
+            int temp = num;
+            boolean flag = false;
+            while(temp > 0){
+                if(temp % 1000 == 666){
+                    flag = true;
+                    break;
+                }
+                temp /= 10;
+            }
+            
+            if(flag) count++;
             if(count == N) break;
 
             num++;
