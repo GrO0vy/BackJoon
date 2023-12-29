@@ -10,18 +10,12 @@ class Solution {
         int end = people.length - 1;
         
         while(start <= end){
-            if(start == end) {
-                answer++;
-                break;
-            }
-            
             int min = people[start];
             int max = people[end];
             
             if(min + max <= limit){
                 start++;
             }
-            
             end--;
             answer++;
         }
