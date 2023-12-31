@@ -10,24 +10,19 @@ public class Main{
 
         for(int i = 0; i < N; i++){
             String word = br.readLine();
-            if(words.contains(word)) continue;
-
-            int idx = words.size();
-            for(int j = words.size() - 1; j >= 0; j--){
-                if(words.get(j).length() > word.length()){
-                    idx = j;
-                }
-                else if(words.get(j).length() == word.length()){
-                    if(words.get(j).compareTo(word) > 0){
-                        idx = j;
-                    }
-                }
-                else break;
-            }
-
-            if(idx == words.size()) words.add(word);
-            else words.add(idx, word);
+            if(!words.contains(word)) words.add(word);
         }
+
+        Comparator<String> comparator = new Comparator<String>(){
+            public int compare(String o1, String o2){
+                if(o1.length() == o2.length()){
+                    return o1.compareTo(o2);
+                }
+                else return o1.length() - o2.length();
+            }
+        };
+
+        Collections.sort(words, comparator);
 
         for(int i = 0; i < words.size(); i++){
             System.out.println(words.get(i));
