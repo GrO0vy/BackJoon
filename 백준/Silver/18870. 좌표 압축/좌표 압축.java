@@ -4,49 +4,31 @@ import java.util.*;
 public class Main{
     public static void main(String[] args) throws IOException{
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+
         int N = Integer.parseInt(br.readLine());
-        A[] arr = new A[N];
+
+        int[] origin = new int[N];
+        int[] sorted = new int[N];
 
         StringTokenizer st = new StringTokenizer(br.readLine());
         for(int i = 0; i < N; i++){
-            arr[i] = new A(i, Integer.parseInt(st.nextToken()));
+            origin[i] = Integer.parseInt(st.nextToken());
+            sorted[i] = origin[i];
         }
 
-        Arrays.sort(arr, new Comparator<A>(){
-            public int compare(A o1, A o2){
-                return o1.value - o2.value;
-            }
-        });
+        Arrays.sort(sorted);
 
+        HashMap<Integer, Integer> ranks = new HashMap<>();
         int rank = 0;
-        for(int i = 1; i < N; i++){
-            if(arr[i].value == arr[i - 1].value) arr[i].rank = rank;
-            else arr[i].rank = ++rank;
+        for(int i = 0; i < N; i++){
+            if(!ranks.containsKey(sorted[i])) ranks.put(sorted[i], rank++);
         }
-
-        Arrays.sort(arr, new Comparator<A>(){
-            public int compare(A o1, A o2){
-                return o1.idx - o2.idx;
-            }
-        });
 
         StringBuilder sb = new StringBuilder();
         for(int i = 0; i < N; i++){
-            sb.append(arr[i].rank + " ");
+            sb.append(ranks.get(origin[i]) + " ");
         }
 
         System.out.println(sb);
-    }
-
-    static class A{
-        int idx;
-        int value;
-        int rank;
-
-        public A(int idx, int value){
-            this.idx = idx;
-            this.value = value;
-            this.rank = 0;
-        }
     }
 }
