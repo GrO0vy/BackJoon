@@ -4,16 +4,14 @@ class Solution {
         int answer = 0;
         HashSet<Integer> set = new HashSet<>();
         
-        for(int i = 0; i < elements.length; i++){
-            int start = 0;
-            do{
+        for(int i = 1; i <= elements.length; i++){
+            for(int j = 0; j < elements.length; j++){
                 int sum = 0;
-                for(int j = start; j <= start + i; j++){
-                    sum += elements[j % elements.length];        
+                for(int k = j; k < j + i; k++){
+                    sum += elements[k % elements.length];    
                 }
                 set.add(sum);
-                start = (start + 1) % elements.length;
-            }while(start > 0);
+            }   
         }
         
         answer = set.size();
