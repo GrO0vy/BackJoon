@@ -26,8 +26,7 @@ class Solution {
             
             for(int i = 0; i < numbers.length; i++){
                 int num = Integer.parseInt(numbers[i]);
-                if(!set.contains(num)){
-                    set.add(num);
+                if(set.add(num)){
                     answer[idx++] = num;
                 }
             }
