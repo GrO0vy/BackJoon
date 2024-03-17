@@ -1,68 +1,61 @@
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Scanner;
-import java.util.StringTokenizer;
+import java.io.*;
+import java.util.*;
 
-public class Main {
-	
-	static class Node{
-		int a,b;
+public class Main{
+    public static void main(String[] args) throws IOException{
+        int[] months = new int[]{0, 0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334};
 
-		public Node(int a, int b) {
-			super();
-			this.a = a;
-			this.b = b;
-		}
-	}
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        int N = Integer.parseInt(br.readLine());
+        int[][] flowers = new int[N][2];
 
-	public static void main(String[] args) throws IOException {
-		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		int N = Integer.parseInt(br.readLine());
-		StringTokenizer st = null;
-		List<Node> list = new ArrayList<>();
+        for(int i = 0; i < N; i++){
+            StringTokenizer st = new StringTokenizer(br.readLine());
+            int startMonth = Integer.parseInt(st.nextToken());
+            int startDay = Integer.parseInt(st.nextToken());
+            int endMonth = Integer.parseInt(st.nextToken());
+            int endDay = Integer.parseInt(st.nextToken());
 
-		for(int i=0; i<N; i++) {
-			st = new StringTokenizer(br.readLine()," ");
-			int a = Integer.parseInt(st.nextToken())*100+Integer.parseInt(st.nextToken());
-			int b = Integer.parseInt(st.nextToken())*100+Integer.parseInt(st.nextToken());
-			list.add(new Node(a, b));
-		}
+            int start = months[startMonth] + startDay;
+            int end = months[endMonth] + endDay;
 
-		Collections.sort(list, new Comparator<Node>() {			
-			@Override
-			public int compare(Node o1, Node o2) {
-				if(o1.a==o2.a) return o1.b-o2.b;
-				return o1.a-o2.a;
-			}
-		});
-		int max = 0,ans = 0;
-		int start = 301;
-		int idx = 0;
-		while(start<1201) {
-			boolean ch = false;
-			for(int i=idx; i<N; i++) {
-				
-				if(list.get(i).a > start) break;
-				//a값이 max값보다 작은 것들 중 b의 값이 가장 큰것을 선택
-				if(list.get(i).a <=start && max<list.get(i).b) {
-					max = list.get(i).b;
-					idx = i+1;
-					ch = true;
-				}
-			}
-			if(ch) {				
-				start = max;
-				ans++;
-			}else break;
-		}
-		if(max<1201) System.out.println(0);
-		else System.out.println(ans);
+            flowers[i][0] = start;
+            flowers[i][1] = end;
+        }
 
-	}
+        Arrays.sort(flowers, new Comparator<>(){
+            public int compare(int[] o1, int[] o2){
+                if(o1[0] == o2[0]) return o1[1] - o2[1];
+                else return o1[0] - o2[0];
+            }
+        });
 
+        int currentEnd = months[3] + 1; // 3월 1일을 일수로 바꾼 값
+        int cnt = 0;
+        int ptr = 0;
+
+        while(currentEnd <= months[12]){
+            boolean find = false;
+            int max = currentEnd;
+
+            for(int i = ptr; i < N; i++){
+                if(flowers[i][0] > currentEnd) break;
+
+                if(flowers[i][1] > max){
+                    find = true;
+                    ptr = i + 1;
+                    max = flowers[i][1];
+                }
+            }
+
+            if(!find){
+                break;
+            }
+
+            currentEnd = max;
+            cnt++;
+        }
+
+        System.out.println(currentEnd <= months[12] ? 0 : cnt);
+    }
 }
