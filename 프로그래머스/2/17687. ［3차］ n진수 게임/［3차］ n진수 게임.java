@@ -8,8 +8,7 @@ class Solution {
             base += tenToN(num, n);
             num++;
         }
-        
-        System.out.println(base);
+
         for(int i = 0; answer.length() < t; i += m){
             answer += base.charAt(i + p - 1) + "";
         }
