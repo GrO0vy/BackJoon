@@ -24,7 +24,7 @@ public class Main{
                 continue;
             }
 
-            int gap = Math.abs(A[left] - A[right]);
+            int gap = A[right] - A[left];
             if(gap < M) right++;
             else{
                 min = Math.min(min, gap);
