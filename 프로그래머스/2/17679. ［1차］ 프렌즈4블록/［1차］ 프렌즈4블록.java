@@ -11,23 +11,20 @@ class Solution {
         }
         
         while(true){
-            HashSet<String> removeBlocks = new HashSet<>();
+            HashSet<int[]> removeBlocks = new HashSet<>();
             
             for(int i = 0; i < m - 1; i++)
                 for(int j = 0; j < n - 1; j++)
                     if(boardArr[i][j] != '0')
                         fourBlock(i, j, boardArr, removeBlocks);
-                
-            // for(int[] a: removeBlocks){
-            //     System.out.println(a[0] + " " + a[1]);
-            // }
-            // System.out.println("==============");
+           
             if(removeBlocks.isEmpty()) break;
             
-            for(String remove: removeBlocks) {
-                String pos[] = remove.split(" ");
-                boardArr[Integer.parseInt(pos[0])][Integer.parseInt(pos[1])] = '0';
-                answer++;
+            for(int[] remove: removeBlocks) {
+                if(boardArr[remove[0]][remove[1]] != '0'){
+                    boardArr[remove[0]][remove[1]] = '0';
+                    answer++;    
+                }
             }
             
             blockDown(boardArr, m, n);
@@ -36,13 +33,13 @@ class Solution {
         return answer;
     }
     
-    void fourBlock(int x, int y, char[][] board, HashSet<String> remove){
+    void fourBlock(int x, int y, char[][] board, HashSet<int[]> remove){
         for(int[] delta: deltas){
             if(board[x][y] != board[x + delta[0]][y + delta[1]]) return;
         }
         
         for(int[] delta: deltas){
-            remove.add((x + delta[0]) + " " + (y + delta[1]));
+            remove.add(new int[]{x + delta[0], y + delta[1]});
         }
     }
     
