@@ -1,67 +1,53 @@
+import java.io.*;
 import java.util.*;
 
-
-public class Main {
-	static int N;	// 원소 개수
-	static int[] U;	// 집합
-	static ArrayList<Integer> sum2;
-	
-	public static void main(String[] args) {
-		Scanner scanner = new Scanner(System.in);
-		
-		N = scanner.nextInt();
-		U = new int[N];
-		int answer = 0;
-		
-		for (int i = 0; i < N; i++) {
-			U[i] = scanner.nextInt();
-		}
-		
-		// 두 수의 합 구하기
-		sum2 = new ArrayList<>();
-		for(int i = 0; i < N; i++) {
-			for(int j = 0; j < N; j++) {
-				sum2.add(U[i] + U[j]);
-			}
-		}
-		
-		// 정렬
-		Arrays.sort(U);
-		Collections.sort(sum2);
-		
-		for(int i = N - 1; i >= 0; i--) {
-			for(int j = 0; j < i; j++) {	// U[i]보다 U[j]가 작아야됨 
-				int gap = U[i] - U[j];
-				
-				// gap이 sum 배열에 있는지 이분탐색으로 찾음
-				if(search(gap) && U[i] > answer) {
-					answer = U[i];
-				}
-			}
-		}
-		System.out.println(answer);
-	}
-	
-	static boolean search(int n) {
-		int s = 0;
-		int f = sum2.size() - 1;
-		int m;
-		
-		while(s < f) {
-			m = (s + f) / 2;
-			
-			if(sum2.get(m) < n) {
-				s = m + 1;
-			}
-			else if(sum2.get(m) > n) {
-				f = m - 1;
-			}
-			else if(sum2.get(m) == n) {
-				return true;
-			}
-		}
-		
-		return false;
-	}
-
+public class Main{
+    public static void main(String[] args) throws IOException{
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        int N = Integer.parseInt(br.readLine());
+        
+        int[] arr = new int[N];
+        int[] sumArr = new int[N * N];
+        
+        for(int i = 0; i < N; i++){
+            arr[i] = Integer.parseInt(br.readLine());
+        }
+        
+        for(int i = 0; i < N; i++){
+            for(int j = 0; j < N; j++){
+                sumArr[i * N + j] = arr[i] + arr[j];
+            }
+        }
+        
+        Arrays.sort(arr);
+        Arrays.sort(sumArr);
+        
+        int answer = 0;
+        
+        for(int i = N - 1; i >= 0; i--){
+            for(int j = 0; j < i; j++){
+                int gap = arr[i] - arr[j];
+                
+                if(isExist(gap, sumArr)) answer = Math.max(answer, arr[i]);  
+            }
+        }
+        
+        System.out.println(answer);
+    }
+    
+    static boolean isExist(int gap, int[] sumArr){
+        int start = 0;
+        int end = sumArr.length - 1;
+        int mid;
+        
+        while(start < end){
+            mid = (end + start) / 2;
+            
+            if(sumArr[mid] == gap) return true;
+            else if(gap > sumArr[mid]) start = mid + 1;
+            else end = mid - 1;
+        }
+        
+        return false;
+    }
 }
