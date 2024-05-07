@@ -1,30 +1,20 @@
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.PriorityQueue;
-//Silver_1927.java
+import java.io.*;
+import java.util.*;
 
-public class Main {
-    public static void main(String[] args) throws NumberFormatException, IOException   {
-        // Scanner scan = new Scanner(System.in);
-        final BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        int n = Integer.parseInt(br.readLine());// 1~n
+public class Main{
+    public static void main(String[] args) throws IOException{
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        int N = Integer.parseInt(br.readLine());
 
-        int input;
-        PriorityQueue<Integer> minQueue = new PriorityQueue<Integer>();
-        for (int i = 0; i < n; i++) {
-            input = Integer.parseInt(br.readLine());
-            if (input>0) {
-                minQueue.add(input);
-            } else {
-                if (!minQueue.isEmpty()) {
-                    System.out.println(minQueue.poll());
-                }
-                else{
-                    System.out.println(0);
-                }
-            }
+        PriorityQueue<Integer> pq = new PriorityQueue<>();
+        StringBuilder sb = new StringBuilder();
+
+        for(int i = 0; i < N; i++){
+            int num = Integer.parseInt(br.readLine());
+            if(num == 0) sb.append((pq.isEmpty() ? 0 : pq.poll()) + "\n");
+            else pq.offer(num);
         }
-        br.close();
+
+        System.out.println(sb);
     }
 }
