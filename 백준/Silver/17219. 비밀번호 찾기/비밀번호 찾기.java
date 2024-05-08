@@ -1,27 +1,24 @@
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
+import java.io.*;
 
-public class Main {
-    public static void main(String[] args) throws IOException {
+public class Main{
+    public static void main(String[] args) throws IOException{
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        String[] input = br.readLine().split(" ");
-        int N = Integer.parseInt(input[0]);
-        int M = Integer.parseInt(input[1]);
+        StringTokenizer st = new StringTokenizer(br.readLine());
 
-        Map<String, String> map = new HashMap<>();
-        for (int i = 0; i < N; i++) {
-            input = br.readLine().split(" ");
-            map.put(input[0], input[1]);
+        int N = Integer.parseInt(st.nextToken());
+        int M = Integer.parseInt(st.nextToken());
+        StringBuilder sb = new StringBuilder();
+
+        HashMap<String, String> map = new HashMap<>();
+
+        for(int i = 0; i < N; i++){
+            st = new StringTokenizer(br.readLine());
+            map.put(st.nextToken(), st.nextToken());
         }
 
-        StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < M; i++)
-            sb.append(map.get(br.readLine())).append('\n');
+        for(int i = 0; i < M; i++) sb.append(map.get(br.readLine()) + "\n");
 
-        System.out.println(sb.toString());
-
+        System.out.println(sb);
     }
 }
