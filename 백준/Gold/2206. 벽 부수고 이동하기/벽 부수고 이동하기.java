@@ -1,87 +1,87 @@
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.LinkedList;
-import java.util.Queue;
+import java.util.*;
+import java.io.*;
 
+public class Main{
+    static int N;
+    static int M;
+    static char[][] map;
+    static int[][] deltas = {{0, 1}, {0, -1}, {1, 0}, {-1, 0}};
 
-public class Main {
-    static class Loc{
-        int i;
-        int j;
-        int cnt;
-        boolean destroyed;
+    static class LOC{
+        int x;
+        int y;
+        int distance;
+        boolean isBreak;
 
-        public Loc(int i, int j, int cnt, boolean d) {
-            this.i = i;
-            this.j = j;
-            this.cnt = cnt;
-            this.destroyed = d;
+        public LOC(int x, int y, int distance, boolean isBreak){
+            this.x = x;
+            this.y = y;
+            this.distance = distance;
+            this.isBreak = isBreak;
         }
     }
 
-
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws IOException{
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        String[] inputs = br.readLine().split(" ");
+        StringTokenizer st = new StringTokenizer(br.readLine());
 
-        int n = Integer.parseInt(inputs[0]);
-        int m = Integer.parseInt(inputs[1]);
+        N = Integer.parseInt(st.nextToken());
+        M = Integer.parseInt(st.nextToken());
+        map = new char[N][M];
 
-        char[][] map = new char[n][m];
-        for (int i = 0; i < n; i++) {
-            String input = br.readLine();
-            for (int j = 0; j < m; j++) {
-                map[i][j] = input.charAt(j);
+        for(int i = 0; i < N; i++) map[i] = br.readLine().toCharArray();
+
+        boolean[][][] visited = new boolean[2][N][M];
+
+        System.out.println(bfs(new LOC(0, 0, 1, false), visited));
+    }
+
+    static int bfs(LOC l, boolean[][][] visited){
+        Queue<LOC> queue = new LinkedList<>();
+        queue.add(l);
+        int minDistance = -1;
+
+        while(!queue.isEmpty()){
+            LOC pos = queue.poll();
+            int curX = pos.x;
+            int curY = pos.y;
+            int distance = pos.distance;
+            boolean isBreak = pos.isBreak;
+
+            if(curX == N - 1 && curY == M - 1){
+                minDistance = distance;
+                break;
             }
-        }
 
+            for(int[] delta : deltas){
+                int nextX = curX + delta[0];
+                int nextY = curY + delta[1];
 
-        Queue<Loc> q = new LinkedList<>();
-        q.add(new Loc(0, 0, 1, false));
-
-        int[] mi = {0, 0, -1, 1};
-        int[] mj = {-1, 1, 0, 0};
-
-        boolean[][][] visited = new boolean[n][m][2];
-
-        while (!q.isEmpty()) {
-            Loc now = q.poll();
-
-            if (now.i == n - 1 && now.j == m - 1) {
-                System.out.println(now.cnt);
-                return;
-            }
-
-            for (int d = 0; d < 4; d++) {
-                int ni = now.i + mi[d];
-                int nj = now.j + mj[d];
-
-                if(ni<0 || ni>=n || nj<0 || nj>=m) continue;
-
-                int next_cnt = now.cnt+1;
-
-                if(map[ni][nj]=='0'){ // 벽이 아니면
-                    if(!now.destroyed && !visited[ni][nj][0]) { // 부신 벽이 여태까지 없었으면
-                        q.add(new Loc(ni, nj, next_cnt, false));
-                        visited[ni][nj][0] = true;
-                    }else if(now.destroyed && !visited[ni][nj][1]){ // 벽을 한번 부신 적이 있으면
-                        q.add(new Loc(ni, nj, next_cnt, true));
-                        visited[ni][nj][1] = true;
+                if(inRange(nextX, nextY)){
+                    if(map[nextX][nextY] == '0'){
+                        if(!isBreak){
+                            if(!visited[0][nextX][nextY]) queue.offer(new LOC(nextX, nextY, distance + 1, false));
+                            visited[0][nextX][nextY] = true;
+                        }
+                        else {
+                            if (!visited[1][nextX][nextY]) queue.offer(new LOC(nextX, nextY, distance + 1, true));
+                            visited[1][nextX][nextY] = true;
+                        }
                     }
-
-                }else if(map[ni][nj]=='1'){ // 벽이면
-
-                    if(!now.destroyed){ // 한번도 벽을 부순적이 없다면 부순다~
-                        q.add(new Loc(ni, nj, next_cnt, true));
-                        visited[ni][nj][1] = true;
+                    else{
+                        if(!isBreak) {
+                            visited[1][nextX][nextY] = true;
+                            queue.offer(new LOC(nextX, nextY, distance + 1, true));
+                        }
                     }
-                    // 한번 부순 적이 있다면 또 부수고 갈 수 없기 때문에 pass
                 }
             }
-
         }
 
-        System.out.println(-1);
+        return minDistance;
+    }
+
+    static boolean inRange(int x, int y){
+        return -1 < x && x < N && -1 < y && y < M;
     }
 }
