@@ -2,46 +2,47 @@ import java.util.*;
 
 class Solution {
     public int solution(String[][] book_time) {
-        int answer = 0;
-        int[][] bookTime = new int[book_time.length][2];
+        int answer = -1;
         
-        for (int i = 0; i<book_time.length; i++) {
-            int start = Integer.parseInt(book_time[i][0].replace(":", ""));
-            int end = Integer.parseInt(book_time[i][1].replace(":", ""));
-            
-            end += 10; // 청소 시간
-            
-            if (end % 100 >= 60) {
-                end += 40;
-            }
-            
-            bookTime[i][0] = start;
-            bookTime[i][1] = end;
-            
-        }
-        
-        Arrays.sort(bookTime, (a1, a2) -> {
-            return a1[0]-a2[0];
-        });
-        PriorityQueue<int[]> pq = new PriorityQueue<>(Comparator.comparingInt(a -> a[1]));
-        for (int[] book : bookTime) {
-            
-            if (pq.isEmpty()) {
-                pq.add(book);
-            } else {
-                int[] tmp = pq.peek();
-                int start = tmp[0];
-                int end = tmp[1];
+        Arrays.sort(book_time, new Comparator<>(){
+            public int compare(String[] o1, String[] o2){
+                int[] time1 = getTime(o1);
+                int[] time2 = getTime(o2);
                 
-                if (book[0] >= end) {
-                    pq.poll();
+                return time1[0] - time2[0];
+            }
+        });
+        
+        PriorityQueue<String[]> useList = new PriorityQueue<>((o1, o2) -> {
+            int[] time1 = getTime(o1);
+            int[] time2 = getTime(o2);
+                
+            return time1[1] - time2[1];
+        });
+        
+        for(int i = 0; i < book_time.length; i++){
+            if(!useList.isEmpty()){
+                while(!useList.isEmpty() && 
+                      getTime(useList.peek())[1] + 10 <= getTime(book_time[i])[0])
+                {
+                    useList.poll();        
                 }
-                pq.add(book);
             }
             
+            useList.offer(book_time[i]);
+            answer = Math.max(answer, useList.size());
         }
-
-        answer = pq.size();
+        
         return answer;
+    }
+    
+    int[] getTime(String[] time){
+        String[] start = time[0].split(":");
+        String[] end = time[1].split(":");
+        
+        int startToInt = Integer.parseInt(start[0]) * 60 + Integer.parseInt(start[1]);
+        int endToInt = Integer.parseInt(end[0]) * 60 + Integer.parseInt(end[1]);
+        
+        return new int[]{startToInt, endToInt};
     }
 }
