@@ -1,36 +1,61 @@
 import java.io.*;
 import java.util.*;
 
-public class Main {
-    public static void main(String[] args) throws IOException {
+public class Main{
+    public static void main(String[] args) throws IOException{
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        StringTokenizer st = new StringTokenizer(br.readLine(), " ");
+        StringTokenizer st = new StringTokenizer(br.readLine());
 
-        int n = Integer.parseInt(st.nextToken()), m = Integer.parseInt(st.nextToken());
+        int cntA = Integer.parseInt(st.nextToken());
+        int cntB = Integer.parseInt(st.nextToken());
 
-        Set<Integer> set1 = new HashSet<>();
-        Set<Integer> set2 = new HashSet<>();
+        List<Integer> setA = new ArrayList<>();
+        List<Integer> setB = new ArrayList<>();
+        LinkedHashSet<Integer> result = new LinkedHashSet<>();
 
-        st= new StringTokenizer(br.readLine()," ");
-        for(int i = 0; i < n; i++)
-            set1.add(Integer.parseInt(st.nextToken()));
-
-
-        st= new StringTokenizer(br.readLine()," ");
-        for(int i = 0; i < m; i++)
-            set2.add(Integer.parseInt(st.nextToken()));
-
-
-        if(set1.isEmpty())
-            System.out.println(0);
-        else {
-            set1.removeAll(set2);
-            System.out.println(set1.size());
-
-            List<Integer> list = new ArrayList<>(set1);
-            Collections.sort(list);
-            for (int i : list)
-                System.out.print(i + " ");
+        st = new StringTokenizer(br.readLine());
+        for(int i = 0; i < cntA; i++){
+            setA.add(Integer.parseInt(st.nextToken()));
         }
+
+        st = new StringTokenizer(br.readLine());
+        for(int i = 0; i < cntB; i++){
+            setB.add(Integer.parseInt(st.nextToken()));
+        }
+
+        Collections.sort(setA);
+        Collections.sort(setB);
+
+        for(int a: setA){
+            result.add(a);
+        }
+        
+        int idxA = 0;
+        int idxB = 0;
+
+
+       while(idxA < cntA  && idxB < cntB){
+            if(setA.get(idxA) < setB.get(idxB)){
+                idxA++;
+            }
+            else if(setA.get(idxA) > setB.get(idxB)){
+                idxB++;
+            }
+            else {
+                result.remove(setA.get(idxA));
+                idxB++;
+                idxA++;
+            }
+        }
+
+        StringBuilder sb = new StringBuilder();
+
+        if(result.isEmpty()) sb.append(0);
+        else{
+            sb.append(result.size() + "\n");
+            for(int num: result) sb.append(num + " ");
+        }
+
+        System.out.println(sb);
     }
 }
