@@ -1,35 +1,39 @@
-import java.util.Scanner;
-import java.util.ArrayList;
-import java.util.Collections;
+import java.io.*;
+import java.util.*;
 
 public class Main{
-    public static void main(String[] args){
-        Scanner sc = new Scanner(System.in);
-        int N = sc.nextInt();
-        int M = sc.nextInt();
-        ArrayList<Integer> nums = new ArrayList<Integer>();
-        
-        for(int i=0; i<N; i++){
-            nums.add(i+1);
+    public static void main(String[] args) throws IOException{
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringTokenizer st = new StringTokenizer(br.readLine());
+
+        int N = Integer.parseInt(st.nextToken());
+        int M = Integer.parseInt(st.nextToken());
+
+        int[] arr = new int[N + 1];
+        for(int i = 1; i <= N; i++) arr[i] = i;
+
+        for(int i = 0; i < M; i++){
+            st = new StringTokenizer(br.readLine());
+            int start = Integer.parseInt(st.nextToken());
+            int end = Integer.parseInt(st.nextToken());
+
+            reverse(arr, start, end);
         }
-        
-        for(int count=0; count<M; count++){
-            int i = sc.nextInt();
-            int j = sc.nextInt();
-            
-            ArrayList<Integer> slice = new ArrayList<Integer>(nums.subList(i-1,j));
-            Collections.reverse(slice);
-            int sliceIndex=0;
-            
-            for(int index = i-1; index<j; index++){
-                nums.set(index,slice.get(sliceIndex));
-                sliceIndex++;
-            }
+
+        StringBuilder sb = new StringBuilder();
+        for(int i = 1; i <= N; i++) sb.append(arr[i] + " ");
+
+        System.out.println(sb);
+    }
+
+    static void reverse(int[] arr, int start, int end){
+        while(start < end){
+            int temp = arr[start];
+            arr[start] = arr[end];
+            arr[end] = temp;
+
+            start++;
+            end--;
         }
-        
-        for(int num : nums){
-            System.out.print(num+" ");
-        }
-        sc.close();
     }
 }
