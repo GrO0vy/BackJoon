@@ -1,52 +1,58 @@
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.StringTokenizer;
+import java.io.*;
+import java.util.*;
 
-public class Main {
-	public static void main(String[] args) throws IOException {
-		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		StringTokenizer st;
+public class Main{
+    public static void main(String[] args) throws IOException{
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringTokenizer st = new StringTokenizer(br.readLine());
 
-		st = new StringTokenizer(br.readLine(), " ");
-		int M = Integer.parseInt(st.nextToken());
-		int N = Integer.parseInt(st.nextToken());
-		int[][] arr = new int[M][N];
-		List<Integer>[] list = new ArrayList[M];
+        int M = Integer.parseInt(st.nextToken());
+        int N = Integer.parseInt(st.nextToken());
 
-		for (int i = 0; i < M; i++) {
-			st = new StringTokenizer(br.readLine(), " ");
-			Set<Integer> set = new HashSet<>();
+        int[][] universes = new int[M][N];
+        int[][] sorted = new int[M][N];
 
-			for (int j = 0; j < N; j++) {
-				int num = Integer.parseInt(st.nextToken());
-				arr[i][j] = num;
-				set.add(num);
-			}
+        for(int i = 0; i < M; i++){
+            st = new StringTokenizer(br.readLine());
+            for(int j = 0; j < N; j++){
+                universes[i][j] = Integer.parseInt(st.nextToken());
+                sorted[i][j] = universes[i][j];
+            }
 
-			list[i] = new ArrayList<>(set);
-			Collections.sort(list[i]);
-		}
+            Arrays.sort(sorted[i]);
+        }
 
-		// 좌표 압축
-		for (int i = 0; i < M; i++)
-			for (int j = 0; j < N; j++)
-				arr[i][j] = Collections.binarySearch(list[i], arr[i][j]);
+        for(int i = 0; i < M; i++) {
+            for (int j = 0; j < N; j++) universes[i][j] = Arrays.binarySearch(sorted[i], universes[i][j]);
+        }
 
-		int count = 0;
-		for (int i = 0; i < M; i++) {
-			for (int j = i + 1; j < M; j++) {
-				if (Arrays.equals(arr[i], arr[j]))
-					count++;
-			}
-		}
+        int result = 0;
+        for(int i = 0; i < M; i++){
+            result += search(i, universes);
+        }
 
-		System.out.println(count);
-	}
+        System.out.println(result);
+    }
+
+    static int search(int start, int[][] universes){
+        int[] origin = universes[start];
+        int cnt = 0;
+
+        for(int i = start + 1; i < universes.length; i++){
+            if(Arrays.equals(origin, universes[i])) cnt++;
+        }
+
+        return cnt;
+    }
+
+    static class Universe{
+        int idx;
+        int value;
+        int priority;
+
+        public Universe(int idx, int value){
+            this.idx = idx;
+            this.value = value;
+        }
+    }
 }
