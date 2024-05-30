@@ -1,34 +1,33 @@
-import java.util.*;
-
 class Solution {
     public int solution(String s) {
-        int answer = Integer.MAX_VALUE;
-        
-        for(int i = 1; i <= s.length(); i++){
-            String tar = "";
-            
-            for(int j = 0; j < s.length(); j += i){
-                String str;
-                
-                if(j + i >= s.length()) str = s.substring(j);
-                else str = s.substring(j, j + i);
-                
-                int cnt = 0;
-                while(j < s.length() && j + i <= s.length() 
-                      && str.equals(s.substring(j, j + i)))
-                {
+        int min = s.length();
+        int len = s.length()/2+1;
+        for(int i = 1; i < len; i++) {
+            String before = "";
+            int sum = 0;
+            int cnt = 1;
+            for(int j = 0; j < s.length();) {               
+                int start = j;
+                j = (j+i > s.length()) ? s.length():j+i;
+                String temp = s.substring(start, j);
+                if(temp.equals(before)) {
                     cnt++;
-                    j += i;
+                } else {
+                    if(cnt != 1) {
+                        sum += (int)Math.log10(cnt)+1;
+                    }
+                    cnt = 1;
+                    sum+=before.length();
+                    before = temp;
                 }
-                
-                if(cnt <= 1) tar += str;
-                else tar += cnt + str;
-                
-                if(cnt > 0) j -= i;
             }
-            
-            answer = Math.min(answer, tar.length());
+            sum+=before.length();
+            if(cnt != 1) {
+                sum += (int)Math.log10(cnt)+1;
+            }
+            min = (min > sum) ? sum : min;
         }
-        return answer;
+
+        return min;
     }
 }
