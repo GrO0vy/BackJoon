@@ -15,7 +15,7 @@ public class Main{
 
         while(true){
             String input = br.readLine();
-            if(input == null || "".equals(input)) break;
+            if(input == null) break;
 
             st = new StringTokenizer(input);
             int curTime = calTime(st.nextToken());
