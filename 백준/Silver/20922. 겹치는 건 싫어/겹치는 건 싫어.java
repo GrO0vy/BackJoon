@@ -1,59 +1,44 @@
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.util.*;
-import java.util.stream.Collectors;
- 
- 
-public class Main {
- 
-    static int n, k;
-    static Map<String, Integer> map = new HashMap<>();
- 
-    static int[] arr;
-    static int[] cnt;
-    static int result;
- 
- 
-    public static void main(String[] args) throws IOException {
+
+public class Main{
+    public static void main(String[] args) throws IOException{
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
- 
-        String[] s = br.readLine().split(" ");
- 
-        n = Integer.parseInt(s[0]);
-        k = Integer.parseInt(s[1]);
- 
-        String[] s1 = br.readLine().split(" ");
- 
-        arr = new int[n];
-        cnt = new int[100001];
- 
-        for(int i=0; i<s1.length; i++){
-            arr[i] = Integer.parseInt(s1[i]);
-        }
-        two();
- 
-        System.out.println(result);
-    }
- 
-    private static void two() {
+        StringTokenizer st = new StringTokenizer(br.readLine());
+
+        int N = Integer.parseInt(st.nextToken());
+        int K = Integer.parseInt(st.nextToken());
+
+        int[] cntNum = new int[100001];
+        int[] arr = new int[N];
+
+        st = new StringTokenizer(br.readLine());
+        for(int i = 0; i < N; i++) arr[i] = Integer.parseInt(st.nextToken());
+
         int left = 0;
         int right = 0;
- 
-        while(left<=right){
-            if(right<=n-1 && cnt[arr[right]] < k){
-                cnt[arr[right]]++;
-                right++;
+        int answer = 0;
+
+        while(right < N){
+            if(cntNum[arr[right]] == K){
+                answer = Math.max(answer, right - left);
+                while(true) {
+                    if(arr[left] == arr[right]){
+                        cntNum[arr[left]]--;
+                        left++;
+                        break;
+                    }
+                    cntNum[arr[left]]--;
+                    left++;
+                }
             }
-            else if(cnt[arr[right]]==k){
-                cnt[arr[left]]--;
-                left++;
-            }
-            result = Math.max(right-left,result);
- 
-            if(right==n){
-                return;
-            }
+
+            cntNum[arr[right]]++;
+            right++;
         }
+
+        answer = Math.max(answer, right - left);
+
+        System.out.println(answer);
     }
 }
