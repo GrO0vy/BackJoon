@@ -1,103 +1,103 @@
-import java.util.*;
 import java.io.*;
+import java.util.*;
 
 public class Main{
+    static int answer = Integer.MAX_VALUE;
     static int N;
-    static int res = 10001;
-    static int[][] req = new int[101][101];
-    static boolean[][] isIslandCheck = new boolean[101][101];
-    static int[] dx = {1,0,-1,0};
-    static int[] dy = {0,1,0,-1};
+    static int[][] map;
+    static int[][] deltas = {{1, 0}, {-1, 0}, {0, 1}, {0, -1}};
 
-    static void dfs(int y, int x, int islandNum){
-        isIslandCheck[y][x] = true;
-        req[y][x] = islandNum;
+    public static void main(String[] args) throws IOException{
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        N = Integer.parseInt(br.readLine());
 
-        for(int i=0;i<4;i++){
-            int ny = y + dy[i];
-            int nx = x + dx[i];
-            if(ny<0 || ny>=N || nx<0 || nx>=N) continue;
+        map = new int[N][N];
+        boolean[][] visited = new boolean[N][N];
 
-            if(req[ny][nx] != 0 && !isIslandCheck[ny][nx]) dfs(ny,nx,islandNum);
-        }
-    }
-
-    static void enlargeIsland(int[][] map, int islandNum){
-        boolean[][] check = new boolean[101][101];
-        Queue<Island> queue = new LinkedList<>();
-
-        // 해당 섬을 큐에 추가
-        for(int i=0;i<N;i++){
-            for(int j=0;j<N;j++){
-                if(map[i][j] == islandNum){
-                    queue.add(new Island(i,j,0));
-                    check[i][j] = true;
-                }
+        for(int i = 0; i < N; i++){
+            StringTokenizer st = new StringTokenizer(br.readLine());
+            for(int j = 0; j < N; j++){
+                map[i][j] = Integer.parseInt(st.nextToken());
             }
         }
 
+        int landNum = 1;
+        for(int i = 0; i < N; i++){
+            for(int j = 0; j < N; j++){
+                if(!visited[i][j] && map[i][j] == 1) giveNumber(i, j, landNum++, visited);
+            }
+        }
+        
+        for(int i = 1; i < landNum; i++){
+            makeBridge(i);
+        }
+
+        System.out.println(answer);
+    }
+
+    static void giveNumber(int x, int y, int landNum, boolean[][] visited){
+        Queue<int[]> queue = new LinkedList<>();
+        queue.offer(new int[]{x, y});
+
         while(!queue.isEmpty()){
-            Island position = queue.poll();
+            int[] pos = queue.poll();
+            int curX = pos[0];
+            int curY = pos[1];
 
-            for(int i=0;i<4;i++){
-                int ny = position.y + dy[i];
-                int nx = position.x + dx[i];
-                if(ny<0 || ny>=N || nx<0 || nx>=N) continue;
+            if(!visited[curX][curY]){
+                visited[curX][curY] = true;
+                map[curX][curY] = landNum;
 
-                // 만약 이동한 값이 다른 섬이었을 경우 현재 cnt값을 res와 비교
-                if(map[ny][nx] != islandNum && req[ny][nx] != 0){
-                    if(res > position.cnt && position.cnt != 0) res = position.cnt;
-                }
-                else{
-                    // 이동한 좌표가 바다이고 체크되지 않았을 경우
-                    if(map[ny][nx]==0 && !check[ny][nx]){
-                        check[ny][nx] = true;
-                        queue.add(new Island(ny,nx, position.cnt+1));
+                for(int[] delta: deltas){
+                    int nextX = curX + delta[0];
+                    int nextY = curY + delta[1];
+
+                    if(inRange(nextX, nextY) && !visited[nextX][nextY] && map[nextX][nextY] == 1){
+                        queue.offer(new int[]{nextX, nextY});
                     }
                 }
             }
         }
     }
 
-    public static void main(String[] args) throws Exception{
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        N = Integer.parseInt(br.readLine());
+    static void makeBridge(int landNum){
+        Queue<int[]> queue = new LinkedList<>();
+        boolean[][] visited = new boolean[N][N];
 
-        for(int i=0;i<N;i++){
-            StringTokenizer st = new StringTokenizer(br.readLine());
-            for(int j=0;j<N;j++){
-                req[i][j] = Integer.parseInt(st.nextToken());
-            }
-        }
-
-        // 같은 섬끼리 그룹핑
-        int islandNum = 1;
-        for(int i=0;i<N;i++){
-            for(int j=0;j<N;j++){
-                if(!isIslandCheck[i][j] && req[i][j] != 0){
-                    dfs(i,j,islandNum);
-                    islandNum++;
+        for(int i = 0; i < N; i++){
+            for(int j = 0; j < N; j++){
+                if(map[i][j] == landNum) {
+                    queue.offer(new int[]{i, j, 0});
                 }
             }
         }
 
-        // 각 섬 별로 육지를 확장시켜 다른 육지와 닿았을 때의 값의 최솟값을 구함
-        for(int i=1;i<=islandNum;i++){
-            int[][] map = req.clone();
-            enlargeIsland(map,i);
+        while(!queue.isEmpty()){
+            int[] pos = queue.poll();
+            int curX =pos[0];
+            int curY =pos[1];
+            int dis =pos[2];
+
+            for(int[] delta: deltas){
+                int nextX = curX + delta[0];
+                int nextY = curY + delta[1];
+
+                if(!inRange(nextX, nextY)) continue;
+
+                if(!visited[nextX][nextY] && map[nextX][nextY] == 0) {
+                    queue.offer(new int[]{nextX, nextY, dis + 1});
+                    visited[nextX][nextY] = true;
+                }
+                else{
+                    if(map[nextX][nextY] != 0 && map[nextX][nextY] != landNum){
+                        answer = Math.min(answer, dis);
+                    }
+                }
+            }
         }
-
-        System.out.println(res);
     }
-}
 
-class Island{
-    int y;
-    int x;
-    int cnt;
-    Island(int y, int x, int cnt){
-         this.y = y;
-         this.x = x;
-         this.cnt = cnt;
-     }
+    static boolean inRange(int x, int y){
+        return -1 < x && x < N && -1 < y && y < N;
+    }
 }
