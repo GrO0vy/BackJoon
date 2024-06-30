@@ -1,46 +1,41 @@
-
-import java.io.*;
 import java.util.*;
- 
-public class Main {    
-    
-    public static void main(String[] args) throws NumberFormatException, IOException {
+import java.io.*;
+
+public class Main{
+    public static void main(String[] args) throws IOException{
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        
-        int n = Integer.parseInt(br.readLine());
-        int[][] pos = new int[n][2];
-        int result=0;
-        
-        for (int i = 0; i < n; i++) {
-            String line = br.readLine();
-            int p1 = Integer.parseInt(line.split(" ")[0]);
-            int p2 = Integer.parseInt(line.split(" ")[1]);
-            pos[i][0] = p1;
-            pos[i][1] = p2;
-        }
-        
-        Arrays.sort(pos, new Comparator<int[]>() { //x좌표 오름차순 정렬. x좌표 같으면 y좌표 오름차순 정렬
-            @Override
-            public int compare(int[] o1, int[] o2) {
-                if(o1[0] == o2[0])  return o1[1] - o2[1];
-                else  return o1[0] - o2[0];
+        int N = Integer.parseInt(br.readLine());
+        int answer = 0;
+
+        PriorityQueue<int[]> pq = new PriorityQueue<>((o1, o2) -> o1[0] - o2[0]);
+
+        for(int i = 0; i < N; i++){
+            StringTokenizer st = new StringTokenizer(br.readLine());
+            int left = Integer.parseInt(st.nextToken());
+            int right = Integer.parseInt(st.nextToken());
+
+            if(left > right){
+                int temp = left;
+                left = right;
+                right = temp;
             }
-        }); 
-        
-        int min = pos[0][0];//이전 선의 x좌표
-        int max = pos[0][1];//이전 선의 y좌표
-        int len = max - min;
-        for(int i = 1; i < n; i++) {
-            if(min <= pos[i][0] && pos[i][1] <= max) { //현재 선이 이전 선에 포함된다면
-                continue;
-            } else if(pos[i][0] < max) { //현재 선의 시작점이 이전 선에 포함된다면
-                len += pos[i][1] - max;
-            } else { //현재 선과 이전 선이 겹치지 않는다면
-                len += pos[i][1] - pos[i][0];
-            }
-            min = pos[i][0];
-            max = pos[i][1];
+
+            pq.offer(new int[]{left, right});
         }
-        System.out.println(len);
+
+
+        while(!pq.isEmpty()){
+            int[] pos = pq.poll();
+            int start = pos[0];
+            int end = pos[1];
+
+            while(!pq.isEmpty() && pq.peek()[0] <= end){
+                end = Math.max(end, pq.poll()[1]);
+            }
+
+            answer += end - start;
+        }
+
+        System.out.println(answer);
     }
 }
