@@ -8,41 +8,41 @@ public class Main{
 
         int N = Integer.parseInt(st.nextToken());
         int M = Integer.parseInt(st.nextToken());
+        int minValue = Integer.MAX_VALUE;
 
-        int[] pointer = new int[N];
         int[][] arr = new int[N][M];
-
         for(int i = 0; i < N; i++){
             st = new StringTokenizer(br.readLine());
             for(int j = 0; j < M; j++){
                 arr[i][j] = Integer.parseInt(st.nextToken());
             }
-
             Arrays.sort(arr[i]);
         }
 
-        int result = Integer.MAX_VALUE;
+        int[] idx = new int[N];
+        int max = Integer.MIN_VALUE;
 
-        while(true){
-            int min = Integer.MAX_VALUE;
-            int max = Integer.MIN_VALUE;
-            int minIdx = 0;
-
-            for(int i = 0; i < N; i++){
-                if(arr[i][pointer[i]] < min) {
-                    min = arr[i][pointer[i]];
-                    minIdx = i;
-                }
-
-                if(arr[i][pointer[i]] > max) max = arr[i][pointer[i]];
-            }
-
-            result = Math.min(result, max - min);
-            pointer[minIdx]++;
-
-            if(pointer[minIdx] == M) break;
+        PriorityQueue<Integer> pq = new PriorityQueue<>((o1, o2) -> arr[o1][idx[o1]] - arr[o2][idx[o2]]);
+        for(int i = 0; i < N; i++){
+            pq.offer(i);
+            max = Math.max(max, arr[i][idx[i]]);
         }
 
-        System.out.println(result);
+        while(!pq.isEmpty()){
+            int minIdx = pq.poll();
+
+            int value = max - arr[minIdx][idx[minIdx]];
+            if(value < minValue){
+                minValue = value;
+            }
+
+            idx[minIdx]++;
+            if(idx[minIdx] >= M) break;
+
+            max = Math.max(max, arr[minIdx][idx[minIdx]]);
+            pq.offer(minIdx);
+        }
+
+        System.out.println(minValue);
     }
 }
