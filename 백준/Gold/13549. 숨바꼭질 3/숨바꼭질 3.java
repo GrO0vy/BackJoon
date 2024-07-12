@@ -1,44 +1,54 @@
 import java.util.*;
- 
-public class Main {    
- 
-    static int min = Integer.MAX_VALUE;
-    static int n, k;
-    static boolean[] visited;
-    static int max = 100000;
-    
-    public static void main(String args[]) {
-        Scanner scan = new Scanner(System.in);
-        
-        n = scan.nextInt();
-        k = scan.nextInt();
-        
-        visited = new boolean[max + 1];
-        bfs();
-        System.out.println(min);
-    }
-    
-    public static void bfs() {
-        Queue<Node> q = new LinkedList<>();
-        q.offer(new Node(n, 0));
-        
-        while(!q.isEmpty()) {
-            Node node = q.poll();
-            visited[node.x] = true;
-            if(node.x == k) min = Math.min(min, node.time);
-            
-            if(node.x * 2 <= max && visited[node.x * 2] == false) q.offer(new Node(node.x * 2, node.time));
-            if(node.x + 1 <= max && visited[node.x + 1] == false) q.offer(new Node(node.x + 1, node.time + 1));
-            if(node.x - 1 >= 0 && visited[node.x - 1] == false) q.offer(new Node(node.x - 1, node.time + 1));
+import java.io.*;
+
+public class Main{
+    public static void main(String[] args) throws IOException{
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringTokenizer st = new StringTokenizer(br.readLine());
+
+        int N = Integer.parseInt(st.nextToken());
+        int K = Integer.parseInt(st.nextToken());
+        boolean[] visited = new boolean[100001];
+        int result = 0;
+
+        PriorityQueue<Node> queue = new PriorityQueue<>((o1, o2) -> o1.time - o2.time);
+        queue.offer(new Node(N, 0));
+
+        while(!queue.isEmpty()){
+            Node current = queue.poll();
+
+            if(current.pos == K){
+                result = current.time;
+                break;
+            }
+
+            if(!visited[current.pos]){
+                visited[current.pos] = true;
+                int next;
+                int nextTime = current.time + 1;
+
+                for(int i = 0; i < 3; i++){
+                    if(i == 0) next = current.pos - 1;
+                    else if(i == 1) next = current.pos + 1;
+                    else {
+                        next = current.pos * 2;
+                        nextTime -= 1;
+                    }
+
+                    if(next >= 0 && next <= 100000 && !visited[next]) queue.offer(new Node(next, nextTime));
+                }
+            }
         }
+
+        System.out.println(result);
     }
-    
-    public static class Node {
-        int x;
+
+    static class Node{
+        int pos;
         int time;
-        
-        public Node(int x, int time) {
-            this.x = x;
+
+        public Node(int pos, int time){
+            this.pos = pos;
             this.time = time;
         }
     }
