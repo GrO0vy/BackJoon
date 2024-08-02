@@ -1,80 +1,85 @@
 import java.util.*;
- 
-public class Main {
-    
-    static int k, w, h;
-    static int[][] board;
-    static int min = Integer.MAX_VALUE;
-    static int[] hdx = {-2, -2, -1, -1, 1, 1, 2, 2}; //말이 이동할 수 있는 8방향
-    static int[] hdy = {-1, 1, -2, 2, -2, 2, -1, 1};
-    static int[] dx = {0, 1, 0 ,-1}; // 원숭이가 이동할 수 있는 4방향
-    static int[] dy = {1, 0, -1, 0};
-    static boolean[][][] visited;
-    
-    public static void main(String[] args) {
-        Scanner scan = new Scanner(System.in);
-    
-        k = scan.nextInt();
-        w = scan.nextInt();
-        h = scan.nextInt();
-        
-        board = new int[h][w];
-        for(int i = 0; i < h; i++) {
-            for(int j = 0; j < w; j++) {
-                board[i][j] = scan.nextInt();
+import java.io.*;
+
+public class Main{
+    static int W;
+    static int H;
+    static int[][] deltas = {{0, 1}, {0, -1}, {1, 0}, {-1, 0}};
+    static int[][] horseDeltas = {{2, 1}, {2, -1}, {-2, 1}, {-2, -1},{1, 2}, {1, -2}, {-1, 2}, {-1, -2}};
+
+    public static void main(String[] args) throws IOException{
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        int K = Integer.parseInt(br.readLine());
+
+        StringTokenizer st = new StringTokenizer(br.readLine());
+        W = Integer.parseInt(st.nextToken());
+        H = Integer.parseInt(st.nextToken());
+
+        int[][] map = new int[H][W];
+
+        for(int i = 0; i < H; i++){
+            st = new StringTokenizer(br.readLine());
+            for(int j = 0; j < W; j++){
+                map[i][j] = Integer.parseInt(st.nextToken());
             }
         }
-        
-        visited = new boolean[h][w][k + 1];
-        min = bfs(0, 0);
-        
-        if(min == Integer.MAX_VALUE) System.out.println("-1");
-        else System.out.println(min);
-    }
-    
-    public static int bfs(int x, int y) {
-        Queue<Node> q = new LinkedList<>();
-        q.offer(new Node(x, y, 0, k)); 
-        visited[x][y][k] = true;
-        
-        while(!q.isEmpty()) {
-            Node current = q.poll();
-            if(current.x == h - 1 && current.y == w - 1) return current.count; 
-            
-            for(int i = 0; i < 4; i++) {
-                int nx = current.x + dx[i];
-                int ny = current.y + dy[i];
-                if(nx >= 0 && ny >= 0 && nx < h && ny < w && !visited[nx][ny][current.k] && board[nx][ny] == 0) {
-                    visited[nx][ny][current.k] = true;
-                    q.offer(new Node(nx, ny, current.count + 1, current.k));
-                }
+
+        boolean[][][] visited = new boolean[H][W][K + 1];
+
+        Queue<Pos> queue = new LinkedList<>();
+        queue.offer(new Pos(0, 0, 0, K));
+
+        int result = -1;
+
+        while(!queue.isEmpty()){
+            Pos current = queue.poll();
+
+            if(visited[current.x][current.y][current.cntHorse]) continue;
+
+            if(current.x == H - 1 && current.y == W - 1){
+                result = current.distance;
+                break;
             }
-            
-            if(current.k > 0) {
-                for(int i = 0; i < 8; i++) {
-                    int nx = current.x + hdx[i];
-                    int ny = current.y + hdy[i];
-                    if(nx >= 0 && ny >= 0 && nx < h && ny < w && !visited[nx][ny][current.k - 1] && board[nx][ny] == 0) {
-                        visited[nx][ny][current.k - 1] = true;
-                        q.offer(new Node(nx, ny, current.count + 1, current.k - 1));
-                    }
+
+            visited[current.x][current.y][current.cntHorse] = true;
+
+            for(int[] delta: deltas){
+                int nextX = current.x + delta[0];
+                int nextY = current.y + delta[1];
+
+                if(inRange(nextX, nextY) && !visited[nextX][nextY][current.cntHorse] && map[nextX][nextY] == 0)
+                    queue.offer(new Pos(nextX, nextY, current.distance + 1, current.cntHorse));
+            }
+
+            if(current.cntHorse > 0){
+                for(int[] horseDelta: horseDeltas){
+                    int nextX = current.x + horseDelta[0];
+                    int nextY = current.y + horseDelta[1];
+
+                    if(inRange(nextX, nextY) && !visited[nextX][nextY][current.cntHorse] && map[nextX][nextY] == 0)
+                        queue.offer(new Pos(nextX, nextY, current.distance + 1, current.cntHorse - 1));
                 }
             }
         }
-        return min;
+
+        System.out.println(result);
     }
-    
-    public static class Node {
+
+    static boolean inRange(int x, int y){
+        return -1 < x && x < H && -1 < y && y < W;
+    }
+
+    static class Pos{
         int x;
         int y;
-        int count;
-        int k;
-        
-        public Node(int x, int y, int count, int k) {
+        int distance;
+        int cntHorse;
+
+        public Pos(int x, int y, int distance, int cntHorse){
             this.x = x;
             this.y = y;
-            this.count = count;
-            this.k = k;
+            this.distance = distance;
+            this.cntHorse = cntHorse;
         }
     }
 }
