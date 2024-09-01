@@ -1,91 +1,95 @@
-import java.io.*;
-import java.util.*;
+    import java.util.*;
+    import java.io.*;
 
-class Node{
-	int x,y,dist,boom,day;
-	Node(int x, int y, int dist, int boom, int day){
-		this.x = x;
-		this.y = y;
-		this.dist = dist;
-		this.boom = boom;
-		this.day = day;
-	}
-}
+    public class Main {
+        static int[][] deltas = {{0, 1}, {0, -1}, {1, 0}, {-1, 0}};
+        static int N;
+        static int M;
 
-public class Main {
+        public static void main(String[] args) throws IOException {
+            BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+            StringTokenizer st = new StringTokenizer(br.readLine());
 
-	static final int dx[] = {0,0,1,-1};
-	static final int dy[] = {1,-1,0,0};
-	static int map[][];
-	static boolean visit[][][][];
-	static int n,m,k,ans;
-	public static void main(String[] args) throws IOException {
-		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		StringTokenizer st = new StringTokenizer(br.readLine());
-		
-		n = Integer.parseInt(st.nextToken());
-		m = Integer.parseInt(st.nextToken());
-		k = Integer.parseInt(st.nextToken());
-		map = new int[n][m];
-		visit = new boolean[n][m][k+1][2];
-		
-		for(int i=0; i<n; i++) {
-			String s = br.readLine();
-			for(int j=0; j<m; j++) {
-				map[i][j] = s.charAt(j) - '0';
-			}
-		}
-		ans = -1;
-		bfs();
-		
-		System.out.println(ans);
-		
-	}
-	
-	static void bfs() {
-		Queue<Node> q = new LinkedList<>();
-		q.add(new Node(0,0,1,0,0)); //x, y, dist, boom, day
-		visit[0][0][0][0] = true;
-		
-		while(!q.isEmpty()) {
-			Node now = q.poll();
-			int x = now.x;
-			int y = now.y;
-			
-			if(x == n-1 && y == m-1) {
-				ans = now.dist;
-				return;
-			}
-			
-			for(int i=0; i<4; i++) {
-				int nx = x + dx[i];
-				int ny = y + dy[i];
-				
-				if(0 > nx || nx >= n || 0 > ny || ny >= m) continue;
-				
-				if(map[nx][ny] == 0) {
-					if(now.day == 0 && !visit[nx][ny][now.boom][now.day+1]) {
-						q.add(new Node(nx,ny,now.dist+1,now.boom,now.day+1));	
-						visit[nx][ny][now.boom][now.day+1] = true;
-					}
-					else if(now.day == 1 && !visit[nx][ny][now.boom][now.day-1]){
-						q.add(new Node(nx,ny,now.dist+1,now.boom,now.day-1));
-						visit[nx][ny][now.boom][now.day-1] = true;
-					}
-				}else { //낮은 0 밤은 1
-					if(now.boom < k && now.day == 0 && !visit[nx][ny][now.boom+1][now.day+1]) {
-						visit[nx][ny][now.boom+1][now.day+1] = true;
-						q.add(new Node(nx,ny,now.dist+1,now.boom+1,now.day+1));
-					}else if(now.boom < k && now.day == 1 && !visit[x][y][now.boom][now.day-1]) {
-						visit[x][y][now.boom][now.day-1] = true;
-						q.add(new Node(x,y,now.dist+1,now.boom,now.day-1));
-					}
-				}
-					
-			}
-			
-		}
-		
-	}
+            N = Integer.parseInt(st.nextToken());
+            M = Integer.parseInt(st.nextToken());
+            int K = Integer.parseInt(st.nextToken());
 
-}
+            char[][] map = new char[N][M];
+            for (int i = 0; i < N; i++) {
+                map[i] = br.readLine().toCharArray();
+            }
+
+            boolean[][][][] visited = new boolean[N][M][K + 1][2];
+
+            Queue<Pos> queue = new LinkedList<>();
+            queue.offer(new Pos(0, 0, 1, K, 1));
+            visited[0][0][0][0] = true;
+
+            int result = -1;
+            while (!queue.isEmpty()) {
+                Pos current = queue.poll();
+
+                if (current.x == N - 1 && current.y == M - 1) {
+                    result = current.dis;
+                    break;
+                }
+
+                for (int[] delta : deltas) {
+                    int nextX = current.x + delta[0];
+                    int nextY = current.y + delta[1];
+
+                    if (inRange(nextX, nextY)) {
+                        if (map[nextX][nextY] == '0') {
+                            if (current.isDay == 1 && !visited[nextX][nextY][current.cntBreak][current.isDay - 1]) {
+                                queue.offer(new Pos(nextX, nextY, current.dis + 1, current.cntBreak, current.isDay - 1));
+                                visited[nextX][nextY][current.cntBreak][current.isDay - 1] = true;
+                            }
+                            else if(current.isDay == 0 && !visited[nextX][nextY][current.cntBreak][current.isDay]){
+                                queue.offer(new Pos(nextX, nextY, current.dis + 1, current.cntBreak, current.isDay + 1));
+                                visited[nextX][nextY][current.cntBreak][current.isDay + 1] = true;
+                            }
+                        } else {
+                            if (current.cntBreak > 0) {
+                                if (current.isDay == 1) {
+                                    if (!visited[nextX][nextY][current.cntBreak - 1][current.isDay - 1]) {
+                                        queue.offer(new Pos(nextX, nextY, current.dis + 1, current.cntBreak - 1, current.isDay - 1));
+                                        visited[nextX][nextY][current.cntBreak - 1][current.isDay - 1] = true;
+                                    }
+                                }
+                                else {
+                                    if (!visited[current.x][current.y][current.cntBreak][current.isDay + 1]) {
+                                        queue.offer(new Pos(current.x, current.y, current.dis + 1, current.cntBreak, current.isDay + 1));
+                                        visited[current.x][current.y][current.cntBreak][current.isDay + 1] = true;
+                                    }
+                                }
+                            }
+                        }
+
+                    }
+                }
+            }
+
+            System.out.println(result);
+        }
+
+        static boolean inRange(int x, int y) {
+            return -1 < x && x < N && -1 < y && y < M;
+        }
+
+        static class Pos {
+            int x;
+            int y;
+            int dis;
+            int cntBreak;
+
+            int isDay;
+
+            public Pos(int x, int y, int dis, int cntBreak, int isDay) {
+                this.x = x;
+                this.y = y;
+                this.dis = dis;
+                this.cntBreak = cntBreak;
+                this.isDay = isDay;
+            }
+        }
+    }
