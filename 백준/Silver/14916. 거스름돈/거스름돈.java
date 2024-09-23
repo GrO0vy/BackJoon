@@ -5,24 +5,22 @@ public class Main{
         Scanner sc = new Scanner(System.in);
         
         int n = sc.nextInt();
+        int count = 0;
         
-        if(n == 1 || n == 3){
-            System.out.println(-1);
-            return;
-        }
-        
-        int five = 0;
-        int two = 0;
-        
-        if((n % 5) % 2 == 0){
-            five = n / 5;
-        }
+        if(n % 5 == 0) count = n / 5;
         else{
-            five = n / 5 - 1;
+            while(n > 0){
+                n -= 2;
+                count++;
+                if(n % 5 == 0){
+                    count += n / 5;
+                    n %= 5;
+                    break;
+                }
+            }    
         }
         
-        two = (n - (5 * five)) / 2;
-        
-        System.out.println(five + two);
+        if(n < 0) System.out.println(-1);
+        else System.out.println(count);
     }
 }
