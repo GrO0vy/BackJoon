@@ -1,31 +1,44 @@
-import java.util.*;
-import java.io.*;
-
-public class Main{
-    static StringBuilder sb;
-
-    public static void main(String[] args) throws IOException{
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        StringTokenizer st = new StringTokenizer(br.readLine());
-
-        int N = Integer.parseInt(st.nextToken());
-        int M = Integer.parseInt(st.nextToken());
-        sb = new StringBuilder();
-
-        recur("", 0, 0, N, M);
-
-        System.out.println(sb);
-    }
-
-    static void recur(String str, int num, int len, int N, int M){
-        if(len == M) {
-            sb.append(str.trim() + "\n");
-            return;
-        }
-
-        for(int i = 1; i <= N; i++){
-            if(i <= num % 10) continue;
-            recur(String.format("%s %d", str, i), num * 10 + i, len + 1, N, M);
-        }
-    }
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.util.StringTokenizer;
+import java.io.IOException;
+ 
+public class Main {
+ 
+	public static int[] arr;
+	public static int N, M;
+	public static StringBuilder sb = new StringBuilder();
+ 
+	public static void main(String[] args) throws IOException {
+ 
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		StringTokenizer st = new StringTokenizer(br.readLine());
+ 
+		N = Integer.parseInt(st.nextToken());
+		M = Integer.parseInt(st.nextToken());
+ 
+		arr = new int[M];
+        
+		dfs(1, 0);
+		System.out.println(sb);
+ 
+	}
+ 
+	public static void dfs(int at, int depth) {
+ 
+		if (depth == M) {
+			for (int val : arr) {
+				sb.append(val).append(' ');
+			}
+			sb.append('\n');
+			return;
+		}
+        
+		for (int i = at; i <= N; i++) {
+ 
+			arr[depth] = i;
+			dfs(i + 1, depth + 1);
+ 
+		}
+	}
 }
