@@ -22,7 +22,7 @@ public class Main{
                 }
             }
 
-            int cnt = Math.min(white, black) + Math.abs(white - black);
+            int cnt = Math.max(white, black);
             sb.append(cnt + "\n");
         }
 
