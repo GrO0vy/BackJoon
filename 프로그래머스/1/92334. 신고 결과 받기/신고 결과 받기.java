@@ -2,38 +2,28 @@ import java.util.*;
 
 class Solution {
     public int[] solution(String[] id_list, String[] report, int k) {
-        int[] answer = {};
-        answer = new int[id_list.length];
-
-        HashMap<String, HashSet<String>> logs = new HashMap<>();
-        HashMap<String, Integer> reportedCount = new HashMap<>();
-
-        for (String id : id_list) {
-            logs.put(id, new HashSet<>());
-            reportedCount.put(id, 0);
+        int[] answer = new int[id_list.length];
+        
+        HashMap<String, Integer> idx = new HashMap<>();
+        for(int i = 0; i < id_list.length; i++) idx.put(id_list[i], i);
+        
+        HashMap<String, Set<String>> reports = new HashMap<>();
+        for(String log: report){
+            String[] info = log.split(" ");
+            
+            if(!reports.containsKey(info[1])) reports.put(info[1], new HashSet<>());
+            
+            reports.get(info[1]).add(info[0]);
         }
-
-        for (String users : report) {
-            StringTokenizer st = new StringTokenizer(users);
-            String reporter = st.nextToken();
-            String reportee = st.nextToken();
-            logs.get(reporter).add(reportee);
-        }
-
-        for (String reporter : logs.keySet()) {
-            HashSet<String> reportees = logs.get(reporter);
-            for (String reportee : reportees) {
-                reportedCount.put(reportee, reportedCount.get(reportee) + 1);
+        
+        for(Map.Entry<String, Set<String>> entry: reports.entrySet()){
+            if(entry.getValue().size() >= k){
+                for(String user: entry.getValue()){
+                    answer[idx.get(user)]++;
+                }
             }
         }
-
-        for (int i = 0; i < id_list.length; i++) {
-            String id = id_list[i];
-            for (String reportee : logs.get(id)) {
-                if (reportedCount.get(reportee) >= k) answer[i]++;
-            }
-        }
-
+        
         return answer;
     }
 }
