@@ -1,73 +1,85 @@
 import java.util.*;
 
 class Solution {
-    int basicCharge;
-    int basicTime;
-    int unitTime;
-    int unitCharge;
-    
     public int[] solution(int[] fees, String[] records) {
         int[] answer = {};
-        basicTime = fees[0]; basicCharge = fees[1]; unitTime = fees[2]; unitCharge = fees[3];
         
-        HashMap<String, Car> info = new HashMap<>();
+        HashMap<String, Info> log = new HashMap<>();
         
         for(String record: records){
-            String[] log = record.split(" ");
-            if(log[2].equals("IN")) {
-                int inTime = Integer.parseInt(log[0].substring(0, 2)) * 60 + Integer.parseInt(log[0].substring(3));
-                
-                if(info.containsKey(log[1])) info.get(log[1]).carIn(inTime);
-                else{
-                    Car car = new Car();
-                    car.carIn(inTime);
-                    info.put(log[1], car);
+            String[] detail = record.split(" ");
+            
+            if(detail[2].equals("IN")){
+                if(!log.containsKey(detail[1])){
+                    log.put(detail[1], new Info(detail[1]));
                 }
+                
+                log.get(detail[1]).carIn(calTime(detail[0]));
             }
             else{
-                int outTime = Integer.parseInt(log[0].substring(0, 2)) * 60 + Integer.parseInt(log[0].substring(3));
-                info.get(log[1]).carOut(outTime);
+                log.get(detail[1]).carOut(calTime(detail[0]));
             }
         }
         
-        answer = new int[info.size()];
-        Object[] keys = info.keySet().toArray();
+        PriorityQueue<Info> pq = new PriorityQueue<>((o1, o2) -> o1.number.compareTo(o2.number));
+        
+        for(Info info: log.values()){
+            if(info.timeOut == 23 * 60 + 59) info.carOut(23 * 60 + 59);
             
-        Arrays.sort(keys);
-            
-        for(int i = 0; i < keys.length; i++){
-            Car car = info.get(keys[i]);
-            if(car.outTime == 0) car.carOut(23 * 60 + 59);
-            answer[i] = car.calculation();
+            pq.offer(info);
+        }
+        
+        answer = new int[pq.size()];
+        
+        for(int i = 0; i < answer.length; i++) {
+            answer[i] = pq.poll().calCharge(fees);
         }
         
         return answer;
     }
     
-    class Car{
-        int inTime;
-        int outTime;
+    private int calTime(String time){
+        String[] info = time.split(":");
+        
+        return Integer.parseInt(info[0]) * 60 + Integer.parseInt(info[1]);
+    }
+    
+    class Info {
+        String number;
+        int timeIn;
+        int timeOut;
         int totalTime;
         int charge;
         
-        public void carIn(int inTime){
-            this.inTime = inTime;
-            this.outTime = 0;
+        public Info(String number){
+            this.number = number;
         }
         
-        public void carOut(int outTime){
-            this.outTime = outTime;
-            this.totalTime += outTime - inTime;
+        void carIn(int timeIn){
+            this.timeIn = timeIn;
+            this.timeOut = 23 * 60 + 59;
         }
         
-        public int calculation(){
-            if(totalTime > 0){
-                charge += basicCharge;
-                if(totalTime > basicTime) 
-                    charge += Math.ceil((totalTime - basicTime) * 1.0 / unitTime) * unitCharge;
+        void carOut(int timeOut){
+            this.timeOut = timeOut;
+            totalTime += timeOut - timeIn;
+        }
+        
+        int calCharge(int[] fees){
+            int basicTime = fees[0];
+            int basicPrice = fees[1];
+            int unitTime = fees[2];
+            int unitPrice = fees[3];
+                
+            charge += basicPrice;
+            
+            if(totalTime > basicTime){
+                totalTime -= basicTime;
+                int count = (int) Math.ceil(totalTime / (double)unitTime);
+                charge += unitPrice * count; 
             }
             
-            return this.charge;
+            return charge;
         }
     }
 }
