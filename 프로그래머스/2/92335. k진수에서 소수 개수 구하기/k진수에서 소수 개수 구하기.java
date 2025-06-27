@@ -3,7 +3,7 @@ class Solution {
     public int solution(int n, int k) {
         int answer = 0;
         
-        String[] numbers = convert(n, k).split("0+");
+        String[] numbers = Integer.toString(n, k).split("0+");
         
         for(String num: numbers){
             if(isPrime(Long.parseLong(num))) answer++;        
