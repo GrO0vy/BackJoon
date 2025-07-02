@@ -20,7 +20,7 @@ public class Main{
         int sum = 0;
         int result = length + 1;
 
-        while(left <= length && right <= length){
+        while(right <= length){
             if(sum < target) sum += arr[right++];
             else {
                 result = Math.min(result, right - left);
