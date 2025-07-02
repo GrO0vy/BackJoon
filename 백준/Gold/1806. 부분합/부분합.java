@@ -5,26 +5,29 @@ public class Main{
     public static void main(String[] args) throws IOException{
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringTokenizer st = new StringTokenizer(br.readLine());
-        int N = Integer.parseInt(st.nextToken());
-        int S = Integer.parseInt(st.nextToken());
-        int[] arr = new int[N + 1];
+
+        int length = Integer.parseInt(st.nextToken());
+        int target = Integer.parseInt(st.nextToken());
+
+        int[] arr = new int[length + 1];
 
         st = new StringTokenizer(br.readLine());
-        for(int i = 0; i < N; i++) arr[i] = Integer.parseInt(st.nextToken());
+
+        for(int i = 0; i < length; i++) arr[i] = Integer.parseInt(st.nextToken());
 
         int left = 0;
         int right = 0;
         int sum = 0;
-        int result = Integer.MAX_VALUE;
+        int result = length + 1;
 
-        while(left <= N && right <= N){
-            if(sum >= S) {
+        while(left <= length && right <= length){
+            if(sum < target) sum += arr[right++];
+            else {
                 result = Math.min(result, right - left);
                 sum -= arr[left++];
             }
-            else sum += arr[right++];
         }
 
-        System.out.println(result == Integer.MAX_VALUE ? 0 : result);
+        System.out.println(result == length + 1 ? 0 : result);
     }
 }
