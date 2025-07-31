@@ -1,5 +1,5 @@
-import java.io.*;
 import java.util.*;
+import java.io.*;
 
 public class Main{
     public static void main(String[] args) throws IOException{
@@ -9,36 +9,26 @@ public class Main{
         int N = Integer.parseInt(st.nextToken());
         int K = Integer.parseInt(st.nextToken());
 
-        int[] cntNum = new int[100001];
         int[] arr = new int[N];
+        int[] cnt = new int[100001];
 
         st = new StringTokenizer(br.readLine());
         for(int i = 0; i < N; i++) arr[i] = Integer.parseInt(st.nextToken());
 
         int left = 0;
-        int right = 0;
-        int answer = 0;
+        int result = 0;
 
-        while(right < N){
-            if(cntNum[arr[right]] == K){
-                answer = Math.max(answer, right - left);
-                while(true) {
-                    if(arr[left] == arr[right]){
-                        cntNum[arr[left]]--;
-                        left++;
-                        break;
-                    }
-                    cntNum[arr[left]]--;
-                    left++;
-                }
+        for(int i = 0; i < N; i++){
+            cnt[arr[i]]++;
+
+            while(left < i && cnt[arr[i]] > K){
+                cnt[arr[left]]--;
+                left++;
             }
 
-            cntNum[arr[right]]++;
-            right++;
+            result = Math.max(result, i - left + 1);
         }
 
-        answer = Math.max(answer, right - left);
-
-        System.out.println(answer);
+        System.out.println(result);
     }
 }
