@@ -18,7 +18,6 @@ class Solution {
             }
         }
         
-        for(List<String> l: list) System.out.println(l.toString());
         dfs(0, new ArrayList<>());
         
         return result.size();
