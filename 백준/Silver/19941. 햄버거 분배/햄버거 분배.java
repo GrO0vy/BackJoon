@@ -1,45 +1,32 @@
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
 import java.util.*;
- 
- 
-public class Main {
-	
-	public static int N, K;
-	public static char[] arr;
-	public static boolean[] visited;
-	public static int answer = 0;
+import java.io.*;
+
+public class Main{
     public static void main(String[] args) throws IOException{
-    	BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-    	
-    	StringTokenizer st = new StringTokenizer(br.readLine());
-    	N = Integer.parseInt(st.nextToken());
-    	K = Integer.parseInt(st.nextToken());
-    	arr = new char[N];
-    	visited = new boolean[N];
-    	
-    	st = new StringTokenizer(br.readLine());
-    	arr = st.nextToken().toCharArray();
-    	
-//    	System.out.println(arr);
-    	for(int i=0;i<N;i++) {
-    		if(arr[i] == 'P') { //사람을 만났다면, K인 것 앞에서부터
-    			for(int j=-K;j<=K;j++) {
-    				if( i+j >= N) break;
-    				if( i+j < 0) continue;
-    				
-    				if(arr[i+j] == 'H' && visited[i+j] == false) {
-    					visited[i+j] = true;
-    					answer += 1;
-    					break;
-    				}
-    			}
-    		}
-    	}
-    	
-    	System.out.println(answer);
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringTokenizer st = new StringTokenizer(br.readLine());
+
+        int N = Integer.parseInt(st.nextToken());
+        int K = Integer.parseInt(st.nextToken());
+        boolean[] visited = new boolean[N];
+
+        String table = br.readLine();
+        int result = 0;
+
+        for(int i = 0; i < N; i++){
+            if(table.charAt(i) == 'P'){
+                for(int j = i - K; j <= i + K; j++){
+                    if(j < 0 || j >= N) continue;
+                    
+                    if(table.charAt(j) == 'H' && !visited[j]){
+                        visited[j] = true;
+                        result++;
+                        break;
+                    }
+                }
+            }
+        }
+
+        System.out.println(result);
     }
- 
-    
 }
