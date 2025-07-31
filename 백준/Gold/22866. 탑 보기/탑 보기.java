@@ -15,11 +15,10 @@ public class Main{
         cntCanSee = new int[N];
         near = new int[N];
 
-        Arrays.fill(near, -1);
-
         StringTokenizer st = new StringTokenizer(br.readLine());
         for(int i = 0; i < N; i++) {
             buildings[i] = Integer.parseInt(st.nextToken());
+            near[i] = -100000;
         }
 
         findLeft();
@@ -56,7 +55,7 @@ public class Main{
             }
 
             if(!stack.isEmpty()){
-                if(near[i] == -1 || i - near[i] > stack.peek() - i) near[i] = stack.peek();
+                if(i - near[i] > stack.peek() - i) near[i] = stack.peek();
                 cntCanSee[i] += stack.size();
             }
 
