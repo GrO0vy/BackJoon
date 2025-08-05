@@ -25,8 +25,8 @@ public class Main{
 
         int ranking = 1;
 
-        for(int i = 1; i < N; i++){
-            if(!isSame(countries[i - 1], countries[i])) ranking = i + 1;
+        for(int i = 0; i < N; i++){
+            if(i > 0 && !isSame(countries[i - 1], countries[i])) ranking = i + 1;
 
             if(countries[i].number == K){
                 System.out.println(ranking);
