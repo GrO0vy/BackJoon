@@ -1,33 +1,22 @@
-import java.util.*;
-
 class Solution {
     public long solution(int[] sequence) {
-        int[] pulse1 = sequence.clone();
-        int[] pulse2 = sequence.clone();
+        long answer = 0;
         
-        for(int i = 0; i < sequence.length; i++){
-            if(i % 2 == 0) pulse1[i] *= -1;
-            else pulse2[i] *= -1; 
-        }
+        long[][] dp = new long[2][sequence.length + 1];
         
-        return Math.max(findMax(pulse1), findMax(pulse2));
-    }
-    
-    long findMax(int[] sequence){
-        long max = -100001;
-        long sum = 0;
-        
-        for(int i = 0; i < sequence.length; i++){
-            max = Math.max(max, sum + sequence[i]);
-            
-            if(sum + sequence[i] < 0) {
-                sum = 0;
-                continue;
+        for(int i = 1; i <= sequence.length; i++){
+            if(i % 2 == 0){
+                dp[0][i] = Math.max(dp[0][i - 1] + sequence[i - 1] * -1, sequence[i - 1] * -1);
+                dp[1][i] = Math.max(dp[1][i - 1] + sequence[i - 1], sequence[i - 1]);
+            }
+            else{
+                dp[0][i] = Math.max(dp[0][i - 1] + sequence[i - 1], sequence[i - 1]);
+                dp[1][i] = Math.max(dp[1][i - 1] + sequence[i - 1] * -1, sequence[i - 1] * - 1);
             }
             
-            sum += sequence[i];
+            answer = Math.max(answer, Math.max(dp[0][i], dp[1][i]));
+            
         }
-        
-        return max;
+        return answer;
     }
 }
