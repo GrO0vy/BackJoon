@@ -32,25 +32,25 @@ public class Main{
     }
 
     static int bfs(int N, int[][] map){
-        boolean[][] visited = new boolean[N][N];
+        int[][] distance = new int[N][N];
+        for(int i = 0; i < N; i++) Arrays.fill(distance[i], Integer.MAX_VALUE);
+        
 
         PriorityQueue<Pos> pq = new PriorityQueue<>((o1, o2) -> o1.cost - o2.cost);
         pq.offer(new Pos(0, 0, map[0][0]));
-
+        distance[0][0] = map[0][0];
+        
         while(!pq.isEmpty()){
             Pos current = pq.poll();
 
-            if(visited[current.x][current.y]) continue;
-
             if(current.x == N - 1 && current.y == N - 1) return current.cost;
-
-            visited[current.x][current.y] = true;
 
             for(int[] delta: deltas){
                 int nextX = current.x + delta[0];
                 int nextY = current.y + delta[1];
 
-                if(inRange(nextX, nextY, N) && !visited[nextX][nextY]){
+                if(inRange(nextX, nextY, N) && current.cost + map[nextX][nextY] < distance[nextX][nextY]){
+                    distance[nextX][nextY] = current.cost + map[nextX][nextY];
                     pq.offer(new Pos(nextX, nextY, current.cost + map[nextX][nextY]));
                 }
             }
