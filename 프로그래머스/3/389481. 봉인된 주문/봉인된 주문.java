@@ -1,100 +1,67 @@
-import java.math.BigInteger;
 import java.util.*;
 
 class Solution {
 
-    // 문자열의 사전 순 인덱스 계산 (1-based)
-    public static BigInteger getLexOrder(String s) {
-        int base = 26; // 알파벳 수
-        BigInteger total = BigInteger.ZERO;
-        int length = s.length();
+    // 문자열을 숫자로 바꾸는 함수 (26진수 느낌)
+    // 예: "a" -> 1, "z" -> 26, "aa" -> 27 이런 식으로 변환
+    private long spellToOrder(String s) {
+        long order = 0;      // 결과 숫자
+        long base = 1;       // 26의 거듭제곱 역할 (자리수 계산용)
 
-        // 길이 1부터 length-1까지의 문자열 개수 누적
-        for (int len = 1; len < length; len++) {
-            total = total.add(BigInteger.valueOf(base).pow(len));
+        // 뒤에서부터 한 글자씩 계산 (오른쪽부터 왼쪽으로)
+        for (int i = s.length() - 1; i >= 0; i--) {
+            int c = s.charAt(i) - 'a' + 1; // 'a'는 1, 'b'는 2, ..., 'z'는 26
+            order += c * base;              // 해당 자리수 숫자에 더함
+            base *= 26;                    // 자리수 올리기 (26진법)
         }
 
-        // 현재 문자열이 length자리 문자열 중 어디에 있는지 계산
-        for (int i = 0; i < length; i++) {
-            int charIndex = s.charAt(i) - 'a'; // 현재 문자 인덱스 (0~25)
-            BigInteger count = BigInteger.valueOf(charIndex)
-                    .multiply(BigInteger.valueOf(base).pow(length - i - 1));
-            total = total.add(count); // 자리수 기여도 누적
-        }
-
-        return total.add(BigInteger.ONE); // 1-based 인덱스로 변환
+        return order;
     }
 
-    // 사전 순 인덱스로부터 문자열 복원
-    public static String getStringFromOrder(BigInteger order) {
-        BigInteger base = BigInteger.valueOf(26); // 알파벳 수
-        order = order.subtract(BigInteger.ONE);   // 0-based로 변환
+    // 숫자를 다시 문자열로 바꾸는 함수 (위의 반대 작업)
+    private String orderToSpell(long order) {
+        StringBuilder sb = new StringBuilder();
 
-        int length = 1; // 문자열 길이 초기화
-        BigInteger total = BigInteger.valueOf(26); // 누적 개수
-        BigInteger count = BigInteger.valueOf(26); // 현재 길이 문자열 수
+        // 숫자가 0보다 클 동안 반복
+        while (order > 0) {
+            long rem = order % 26; // 26으로 나눈 나머지 구하기
 
-        // 해당 인덱스가 속한 문자열 길이 찾기
-        while (order.compareTo(total) >= 0) {
-            length++;
-            count = count.multiply(base);
-            total = total.add(count);
+            if (rem == 0) {
+                // 나머지가 0이면 'z'로 치환하고 숫자를 1 줄임
+                sb.append('z');
+                order = (order / 26) - 1;
+            } else {
+                // 나머지가 1~25면 그에 해당하는 문자 추가
+                sb.append((char) ('a' + rem - 1));
+                order /= 26;
+            }
         }
 
-        // 이전까지의 총 문자열 수 계산
-        total = BigInteger.ZERO;
-        count = BigInteger.ONE;
-        for (int i = 1; i < length; i++) {
-            count = count.multiply(base);
-            total = total.add(count);
-        }
-
-        // 현재 길이 내 인덱스 구하기
-        BigInteger indexInLength = order.subtract(total);
-
-        // base-26 변환 (알파벳 조합)
-        char[] result = new char[length];
-        for (int i = length - 1; i >= 0; i--) {
-            BigInteger[] divmod = indexInLength.divideAndRemainder(base);
-            result[i] = (char) ('a' + divmod[1].intValue()); // 나머지로 문자 결정
-            indexInLength = divmod[0]; // 몫으로 다음 자리수 계산
-        }
-
-        return new String(result);
-    }
-
-    // bannedSet을 TreeSet으로 두고, order 이하의 개수를 빠르게 계산
-    private BigInteger countAcceptedUpTo(BigInteger order, NavigableSet<BigInteger> bannedSet) {
-        int bannedCount = bannedSet.headSet(order, true).size(); // order 이하 금지어 개수
-        return order.subtract(BigInteger.valueOf(bannedCount)); // 허용된 문자열 수
+        // 지금까지 문자를 뒤에서부터 붙였으므로 뒤집어서 반환
+        return sb.reverse().toString();
     }
 
     // 메인 함수: n번째 허용된 문자열 찾기
     public String solution(long n, String[] bans) {
-        BigInteger targetIndex = BigInteger.valueOf(n); // 목표 인덱스
-
-        // TreeSet 사용: 정렬된 금지어 인덱스 저장
-        NavigableSet<BigInteger> bannedSet = new TreeSet<>();
-        for (String ban : bans) {
-            bannedSet.add(getLexOrder(ban));
+        // bans를 숫자로 변환해서 배열에 저장
+        long[] bansOrder = new long[bans.length];
+        for (int i = 0; i < bans.length; i++) {
+            bansOrder[i] = spellToOrder(bans[i]);
         }
 
-        // 이분 탐색 시작
-        BigInteger low = BigInteger.ONE;                // 최소 사전 인덱스
-        BigInteger high = BigInteger.ONE.shiftLeft(60); // 충분히 큰 값 (26^10 이상)
+        // 금지된 문자열 숫자들 오름차순 정렬
+        Arrays.sort(bansOrder);
 
-        // 이분 탐색으로 허용된 n번째 문자열 인덱스 찾기
-        while (low.compareTo(high) < 0) {
-            BigInteger mid = low.add(high).divide(BigInteger.TWO);
-            BigInteger accepted = countAcceptedUpTo(mid, bannedSet);
-
-            if (accepted.compareTo(targetIndex) < 0) {
-                low = mid.add(BigInteger.ONE); // 더 큰 범위 탐색
+        // 금지된 문자열 중 n 이하인 개수만큼 n을 증가시켜서 건너뛰기
+        for (long banNum : bansOrder) {
+            if (banNum <= n) {
+                n++;  // 금지어 건너뛰기 위해 n 증가
             } else {
-                high = mid; // mid가 가능성이 있음
+                break; // 이후 숫자는 모두 n보다 크므로 멈춤
             }
         }
 
-        return getStringFromOrder(low); // 찾은 인덱스로 문자열 복원
+        // 보정된 n을 숫자->문자열로 변환해서 결과 반환
+        return orderToSpell(n);
     }
 }
