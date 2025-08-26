@@ -41,13 +41,11 @@ public class Main{
             }
         }
 
-        // StringBuilder sb = new StringBuilder();
-        // for(int i = 0; i < buildings.size(); i++){
-        //     sb.append(buildings.get(i) + " ");
-        // }
-
+        StringBuilder sb = new StringBuilder();
         for(int i = 0; i < buildings.size(); i++){
-            System.out.print(buildings.get(i) + " ");
+            sb.append(buildings.get(i) + " ");
         }
+        
+        System.out.println(sb.toString());
     }
 }
