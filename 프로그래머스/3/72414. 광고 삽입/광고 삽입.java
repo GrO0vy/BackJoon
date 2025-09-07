@@ -47,15 +47,14 @@ class Solution {
         return hour * 3600 + minute * 60 + second;
     }
     
-    String toString(int timeInt){
-        int hour = timeInt / 3600;
-        timeInt -= 3600 * hour;
-        
+    String toString(int timeInt){        
         int second = timeInt % 60;
         timeInt /= 60;
         
         int minute = timeInt % 60;
         timeInt /= 60;
+        
+        int hour = timeInt % 100;
         
         return String.format("%02d:%02d:%02d", hour, minute, second);
     }
